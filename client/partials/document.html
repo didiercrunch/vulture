@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="large-9 columns">
+        <input type="text">
+    </div>
+    <div class="large-3 columns right">
+        <ul class="button-group">
+            <li><a class="button tiny">Query</a></li>
+            <li><a class="button tiny">Clear</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="large-12 columns" style="text-align: center;">
+            <a class="fa fa-angle-left" ng-href="{{ previousDocumentUrl() }}" ng-show="{{ hasPreviousDocument() }}"></a>
+            <kbd>{{idx}} / {{ meta.count}}</kbd>
+            <a class="fa fa-angle-right" ng-href="{{ nextDocumentUrl() }}"></a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="large-12 columns">
+        <table style="width: 100%;">
+            <thead>
+              <tr>
+                <th style="min-width:50px;">Keys</th>
+                <th >Values</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="(key, value) in doc">
+                <td style="vertical-align: top;"><vul-key value="key"></vul-key></td>
+                <td><vul-value value="value"></vul-value></td>
+              </tr>
+            </tbody>
+        </table>
+        
+    </div>
+</div>

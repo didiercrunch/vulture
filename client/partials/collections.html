@@ -1,0 +1,17 @@
+<div class="row">
+    <div class="columns large-12">
+        <h3>Choose your collection</h3>
+    </div>
+</div>
+
+<div class="row" >
+    <ul class="columns large-12">
+        <li ng-repeat="collection in collections">
+            <a ng-href="#/{{server | escape}}/{{ database | escape}}/{{ collection | escape }}/idx/1">
+                <code>{{ collection }}</code>
+            </a>
+        </li>
+    </ul>
+</div>
+
+

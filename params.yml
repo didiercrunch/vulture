@@ -1,0 +1,16 @@
+---
+
+#  This is a YAML configuration file.  To see yaml file specification, see its
+#  wikipedia page at http://en.wikipedia.org/wiki/YAML
+
+
+#  The port where the service will run
+Port: 8000
+
+#  The address where the service will run.  If you wish to run it on your computer, you
+#  should use `localhost`.  If you wish to share the service on your local network, you
+#  should use `0.0.0.0`
+ServingAddress: localhost
+
+MongoServers:
+    - localhost:27017

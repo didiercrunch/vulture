@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" ng-app="vulture">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vulture</title>
+  
+    <!-- If you are using CSS version, only link these 2 files, you may add app.css to use for your overrides if you like. -->
+    <link rel="stylesheet" href="bower_components/foundation/css/foundation.css">
+    <link rel="stylesheet" href="bower_components/foundation/css/normalize.css">
+    <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.css">
+        
+  
+    <!-- If you are using the gem version, you need this only -->
+    <link rel="stylesheet" href="css/vulture.css">
+  
+    <script src="bower_components/angular/angular.js"></script>
+
+</head>
+<body>
+    <div class="row">
+        <div class="large-12 columns">
+            <h3 style="font-family: 'Rock Salt', cursive;">
+                <img src="images/vulture.svg" width="50px" style="margin-right: 100px; "> Vulture</h3>
+        </div>
+    </div>
+    <div class="row" ng-controller="topBarCtrl">
+        <div class="large-12 columns">
+            <ul class="breadcrumbs">
+                <li ng-repeat="p in path" ng-class="{current: $last, unavailable: getHistoryUrl($index)== ''}">
+                    <a ng-href="{{getHistoryUrl($index)}}"> {{ p }} </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div ng-view></div>
+  
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/foundation/js/foundation.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+      
+    <script src="js/vultureApp.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/controllers/homeCtrl.js"></script>
+    <script src="js/controllers/serversCtrl.js"></script>
+    <script src="js/controllers/databasesCtrl.js"></script>
+    <script src="js/controllers/collectionsCtrl.js"></script>
+    <script src="js/controllers/documentCtrl.js"></script>
+    
+    <script src="js/directives/key.js"></script>
+    <script src="js/directives/value.js"></script>
+    
+    
+    <script src="js/controllers/aboutCtrl.js"></script>
+    <script src="js/controllers/topBarCtrl.js"></script>
+    
+    <script>
+      $(document).foundation();
+    </script>
+</body>
+</html>
