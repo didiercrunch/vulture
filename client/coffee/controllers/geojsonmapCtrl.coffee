@@ -1,7 +1,7 @@
 root = this;
 
 
-root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$http', ($scope, $routeParams, $http) ->
+root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$location', '$http', ($scope, $routeParams, $location, $http) ->
     $scope.geojson = {}
     $scope.geojsonData = {}
     $scope.idx = Number($routeParams.idx)
@@ -10,7 +10,7 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$http'
         lng: -72.6169
         zoom: 7
         
-    url  = "/api/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }"
+    url = "/api/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }"
     if $routeParams.query
         url = "#{url}/query/#{$routeParams.query}"
     url = "#{ url }/idx/#{$routeParams.idx - 1}"
@@ -18,10 +18,11 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$http'
         $scope.geojson = res.data.document[$routeParams.key]
         if not $scope.geojson.properties
             $scope.geojson.properties = {}
-        $scope.geojson.properties["_vulture_url_link"] = ""
+        url = "/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }/_id/#{ res.data.document._id }"
+        $scope.geojson.properties["_vulture_url_link"] = url
         $scope.meta = res.data.meta
         $scope.geojsonData =
-            data: $scope.geojson 
+            data: $scope.geojson
             style: undefined
             resetStyleOnMouseout: true
     )
@@ -42,8 +43,7 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$http'
         $scope.idx > 1
     
     $scope.$on "leafletDirectiveMap.geojsonClick", (ev, featureSelected, leafletEvent) ->
-        a = 90
-        b = 89
+        $location.url(featureSelected.properties._vulture_url_link);
             
 ])
 

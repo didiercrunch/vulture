@@ -23,8 +23,10 @@ directive = () ->
         restrict: 'E',
         scope:
             keyName: "="
+            value: "="
             indexes: "="
         controller:["$scope", "$routeParams", ($scope, $routeParams) ->
+                $scope.canMakeHistogram = _.isNumber($scope.value)
                 $scope.hasIndexDesc = hasIndexDesc($scope.keyName, $scope.indexes)
                 $scope.hasIndexAsc = hasIndexAsc($scope.keyName, $scope.indexes)
                 $scope.has2DIndex = has2dIndex($scope.keyName, $scope.indexes)

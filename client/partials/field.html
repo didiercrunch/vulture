@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="large-12 columns" >
+        <dl class="sub-nav" >
+            <dd ng-repeat="f in fields" ng-class="{active: f == field}">
+                <a ng-href="{{ fieldUrl(f) }}">{{ f }}</a>
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="row">
+    <div class="large-12 columns">
+        <pre ng-show="!_.isObject(value)" style="overflow: initial;">
+            {{ value }}
+        </pre>
+        
+        <pre ng-show="_.isObject(value)" style="overflow: initial;">
+            {{ value | niceJSON }}
+        </pre>
+    </div>
+</div>
+

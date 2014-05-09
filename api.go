@@ -6,6 +6,7 @@ import (
 	"errors"
 	"github.com/gorilla/mux"
 	"labix.org/v2/mgo"
+	"labix.org/v2/mgo/bson"
 	"net/http"
 	"strconv"
 )
@@ -139,6 +140,22 @@ func getDocumentByIndex(w http.ResponseWriter, request *http.Request) (interface
 		return nil, errors.New("index field is not an inteder ( " + indexAsString + ")")
 	}
 	return vb.GetDocumentByIndex(index, nil)
+}
+
+func getDocumentById(w http.ResponseWriter, request *http.Request) (interface{}, error) {
+	vb, err := GetVultureBackend(request)
+	if err != nil {
+		return nil, err
+	}
+	vars := mux.Vars(request)
+	id, ok := vars["id"]
+	if !ok {
+		return nil, errors.New("id field not specified")
+	}
+	if !bson.IsObjectIdHex(id) {
+		return nil, errors.New("id field is not an object id")
+	}
+	return vb.GetDocumentByIndex(0, bson.M{"_id": bson.ObjectIdHex(id)})
 }
 
 func getDocumentByQueryAndIndex(w http.ResponseWriter, request *http.Request) (interface{}, error) {

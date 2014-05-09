@@ -34,10 +34,10 @@
             <tbody>
               <tr ng-repeat="(key, value) in doc">
                 <td style="vertical-align: top;">
-                    <vul-key key-name="key" indexes="meta.indexes" ></vul-key>
+                    <vul-key key-name="key" value="value" indexes="meta.indexes" ></vul-key>
                 </td>
                 <td>
-                    <vul-value value="value"></vul-value>
+                    <vul-value value="value" key="key" doc-id="doc._id"></vul-value>
                 </td>
               </tr>
             </tbody>

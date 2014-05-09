@@ -11,7 +11,7 @@ root.controllers.controller('topBarCtrl', ['$scope', '$location', ($scope, $loca
             $scope.path = joinArray($scope.path[0...6], $scope.path[7...-1])
         $scope.getHistoryUrl = (idx) ->
             ret = "#/" + ($scope.path[i] for i in [0...idx]).join("/")
-            if _.indexOf(["idx", "geojson", "query"], $scope.path[idx]) != -1
+            if _.indexOf(["idx", "geojson", "query", "_id", "field"], $scope.path[idx]) != -1
                 return ""
             if idx == 0
                 ret += "servers"

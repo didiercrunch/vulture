@@ -15,3 +15,10 @@ root.filters.filter 'niceJSON', () ->
 root.filters.filter 'replaceReturnByBreak', () ->
     return (text) ->
         return text.replace(new RegExp("\n","g"), "<br>")
+
+root.filters.filter 'onlyNthLines', () ->
+    return (text, n) ->
+        if not _.isString(text)
+            return ""
+        s = text.split("\n")
+        return s[0...n].join("\n")

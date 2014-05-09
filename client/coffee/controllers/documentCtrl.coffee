@@ -65,14 +65,17 @@ testmongoJsToMongoJSON()
 root.controllers.controller('documentCtrl', ['$scope', '$routeParams', '$http', ($scope, $routeParams, $http) ->
     $scope.idx = $routeParams.idx
     $scope.doc = {}
-    $scope.idx = Number($routeParams.idx)
+    $scope.idx = Number($routeParams.idx) or 1
     $scope.meta = {}
     $scope.newQuery = $routeParams.query or ""
     
     url  = "/api/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }"
     if $routeParams.query
         url = "#{url}/query/#{$routeParams.query}"
-    url = "#{ url }/idx/#{$routeParams.idx - 1}"
+    if $routeParams.idx
+        url = "#{ url }/idx/#{$routeParams.idx - 1}"
+    else if $routeParams.id
+        url = "#{ url }/_id/#{$routeParams.id}"
 
     $http.get(url).then((res) ->
          $scope.doc = res.data.document

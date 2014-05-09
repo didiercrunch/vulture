@@ -1,12 +1,19 @@
 <span>
     <span ng-show="isString">
-        <pre> {{value}} </pre>
+        <pre ng-show="isSmallString(value)"> {{value}} </pre>
+        
+        <a ng-hide="isSmallString(value)" ng-href="{{ url() }}">
+            <pre> {{ getSmallPrefix(value) }} </pre>
+        </a>
+        
     </span>
     <span ng-show="isNumber">
         {{value | number | replaceAllCommasBySpaces}}
     </span>
     <span ng-show="isObject || isArray">
-        <pre>{{value | niceJSON}}</pre>
+        <pre ng-show="isSmallObject(value)" >{{value | niceJSON}}</pre>
+        <a ng-hide="isSmallObject(value)" ng-href="{{ url() }}">
+            <pre> {{value | niceJSON | onlyNthLines:5}} </pre>
+        </a>
     </span>
-    
 </span>
