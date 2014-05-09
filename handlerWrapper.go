@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -14,6 +15,7 @@ type ApiHandler func(w http.ResponseWriter, request *http.Request) (interface{},
 func (this ApiHandler) ServeHTTP(w http.ResponseWriter, request *http.Request) {
 	ret, err := this(w, request)
 	if err != nil {
+		log.Println(err)
 		ret = &errorWrapper{err}
 		w.WriteHeader(500)
 	} else {

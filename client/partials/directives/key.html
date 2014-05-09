@@ -1,10 +1,15 @@
-<span>
-    {{value}}
-    <span class="right" style="color:magenta">
-        <i class="fa fa-bolt" ng-show="hasIndex"></i>
-        <i class="fa fa-sort-numeric-asc" ng-show="hasIndexDown"></i>
-        <i class="fa fa-sort-numeric-desc" ng-show="hasIndexUp"></i>
-        <i class="fa fa-map-marker" ng-show="has2DIndexUp"></i>
+<span ng-mouseenter="showTools=true" ng-mouseleave="showTools=false">
+    {{keyName}}
+    
+    <span ng-style="{visibility: showTools ? 'inline': 'hidden'}">
+        <!-- place to but some hoover information-->
     </span>
+    <span class="right" style="color:#008CBA;">
+        <i class="fa fa-sort-numeric-asc" ng-show="hasIndexAsc"></i>
+        <i class="fa fa-sort-numeric-desc" ng-show="hasIndexDesc"></i>
+        <a class="fa fa-globe" ng-show="has2DIndex" ng-href="{{ getGeoJsonUrl() }}" target="_blank"></a>
+    </span>
+    
+    
     
 </span>

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bitbucket.org/damyot/vulture/shared"
+	"encoding/json"
 	"errors"
 	"github.com/gorilla/mux"
 	"labix.org/v2/mgo"
@@ -17,6 +18,7 @@ type VultureBackend struct {
 
 func GetVultureBackend(req *http.Request) (*VultureBackend, error) {
 	vars := mux.Vars(req)
+
 	serverURL, ok := vars["server"]
 	if !ok {
 		return nil, errors.New("server field not specified")
@@ -83,13 +85,13 @@ func (this *VultureBackend) getMetaData(query *mgo.Query) (map[string]interface{
 
 }
 
-func (this *VultureBackend) GetDocumentByIndex(index int) (map[string]interface{}, error) {
+func (this *VultureBackend) GetDocumentByIndex(index int, query interface{}) (map[string]interface{}, error) {
 	doc := make(map[string]interface{})
-	query := this.Collection.Find(nil)
-	if err := query.Skip(index).One(&doc); err != nil {
+	queryResult := this.Collection.Find(query)
+	if err := queryResult.Skip(index).One(&doc); err != nil {
 		return nil, err
 	}
-	return this.wrapDocumentWithMetadata(doc, query)
+	return this.wrapDocumentWithMetadata(doc, queryResult)
 }
 
 func (this *VultureBackend) wrapDocumentWithMetadata(doc map[string]interface{}, query *mgo.Query) (map[string]interface{}, error) {
@@ -136,5 +138,30 @@ func getDocumentByIndex(w http.ResponseWriter, request *http.Request) (interface
 	if err != nil {
 		return nil, errors.New("index field is not an inteder ( " + indexAsString + ")")
 	}
-	return vb.GetDocumentByIndex(index)
+	return vb.GetDocumentByIndex(index, nil)
+}
+
+func getDocumentByQueryAndIndex(w http.ResponseWriter, request *http.Request) (interface{}, error) {
+	vb, err := GetVultureBackend(request)
+	if err != nil {
+		return nil, err
+	}
+	vars := mux.Vars(request)
+	indexAsString, ok := vars["index"]
+	if !ok {
+		return nil, errors.New("index field not specified")
+	}
+	index, err := strconv.Atoi(indexAsString)
+	if err != nil {
+		return nil, errors.New("index field is not an inteder ( " + indexAsString + ")")
+	}
+	queryString, ok := vars["query"]
+	if !ok || queryString == "" {
+		return vb.GetDocumentByIndex(index, nil)
+	}
+	query := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(queryString), &query); err != nil {
+		return nil, errors.New("invalid json")
+	}
+	return vb.GetDocumentByIndex(index, query)
 }

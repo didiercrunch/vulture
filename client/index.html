@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="bower_components/foundation/css/foundation.css">
     <link rel="stylesheet" href="bower_components/foundation/css/normalize.css">
     <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.css">
+    <link rel="stylesheet" href="bower_components/leaflet-dist/leaflet.css">
         
   
     <!-- If you are using the gem version, you need this only -->
@@ -37,10 +38,13 @@
     
     <div ng-view></div>
   
+    <script src="bower_components/leaflet-dist/leaflet.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/foundation/js/foundation.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
+    
       
     <script src="js/vultureApp.js"></script>
     <script src="js/filters.js"></script>
@@ -49,6 +53,7 @@
     <script src="js/controllers/databasesCtrl.js"></script>
     <script src="js/controllers/collectionsCtrl.js"></script>
     <script src="js/controllers/documentCtrl.js"></script>
+    <script src="js/controllers/geojsonmapCtrl.js"></script>
     
     <script src="js/directives/key.js"></script>
     <script src="js/directives/value.js"></script>
