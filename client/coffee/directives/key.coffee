@@ -32,7 +32,11 @@ directive = () ->
                 $scope.hasIndex = $scope.hasIndexDown or $scope.hasIndexUp or $scope.has2DIndex
                 $scope.getGeoJsonUrl = () ->
                     r = $routeParams
-                    return "#" + "/#{r.server}/#{r.database}/#{r.collection}/idx/#{r.idx}/geojson/#{$scope.keyName}"
+                    e = window.encodeURIComponent
+                    url = "#/#{r.server}/#{r.database}/#{r.collection}/idx/#{r.idx}"
+                    if r.query
+                        url = "#{url}/query/#{e(r.query)}"
+                    return "#{url}/geojson/#{$scope.keyName}"
             ]
     return directive
                         

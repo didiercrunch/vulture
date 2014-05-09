@@ -10,8 +10,11 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$http'
         lng: -72.6169
         zoom: 7
         
-
-    $http.get("/api/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }/idx/#{$routeParams.idx - 1}").then((res) ->
+    url  = "/api/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }"
+    if $routeParams.query
+        url = "#{url}/query/#{$routeParams.query}"
+    url = "#{ url }/idx/#{$routeParams.idx - 1}"
+    $http.get(url).then((res) ->
         $scope.geojson = res.data.document[$routeParams.key]
         if not $scope.geojson.properties
             $scope.geojson.properties = {}
@@ -24,10 +27,16 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$http'
     )
     
     $scope.previousDocumentUrl = () ->
-        "#/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }/idx/#{$scope.idx - 1}/geojson/#{$routeParams.key}"
+        url = "#/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }/idx/#{$scope.idx - 1}"
+        if $routeParams.query
+            url = "#{url}/query/#{$routeParams.query}"
+        "#{url}/geojson/#{$routeParams.key}"
 
     $scope.nextDocumentUrl = () ->
-        "#/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }/idx/#{$scope.idx + 1}/geojson/#{$routeParams.key}"
+        url = "#/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }/idx/#{$scope.idx + 1}"
+        if $routeParams.query
+            url = "#{url}/query/#{$routeParams.query}"
+        "#{url}/geojson/#{$routeParams.key}"
 
     $scope.hasPreviousDocument = () ->
         $scope.idx > 1

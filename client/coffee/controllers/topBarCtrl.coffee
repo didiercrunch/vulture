@@ -1,13 +1,17 @@
 root = this;
 
+joinArray = (a, b)->
+    a.push.apply(a, b)
+    return a
+
 root.controllers.controller('topBarCtrl', ['$scope', '$location', ($scope, $location) ->
     $scope.$on('$routeChangeSuccess', (next, current) ->
         $scope.path = _.filter($location.path().split("/"), (s) -> s)
         if $scope.path[5] == "query"
-            $scope.path = $scope.path[0...-1]
+            $scope.path = joinArray($scope.path[0...6], $scope.path[7...-1])
         $scope.getHistoryUrl = (idx) ->
             ret = "#/" + ($scope.path[i] for i in [0...idx]).join("/")
-            if _.indexOf(["idx", "geojson"], $scope.path[idx]) != -1
+            if _.indexOf(["idx", "geojson", "query"], $scope.path[idx]) != -1
                 return ""
             if idx == 0
                 ret += "servers"
