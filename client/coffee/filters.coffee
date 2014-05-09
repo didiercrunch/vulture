@@ -6,8 +6,12 @@ root.filters.filter 'escape', () ->
 
 root.filters.filter 'replaceAllCommasBySpaces', () ->
   return (text) ->
-    return text.replace(new RegExp(",","g"), " ")
+      return text.replace(new RegExp(",","g"), " ")
 
 root.filters.filter 'niceJSON', () ->
   return (obj) ->
-    return JSON.stringify(obj, null, 4);
+      return JSON.stringify(obj, null, 4);
+
+root.filters.filter 'replaceReturnByBreak', () ->
+    return (text) ->
+        return text.replace(new RegExp("\n","g"), "<br>")

@@ -97,13 +97,13 @@ root.controllers.controller('documentCtrl', ['$scope', '$routeParams', '$http', 
     $scope.previousDocumentUrl = () ->
         url = "#/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }/idx/#{$scope.idx - 1}"
         if $routeParams.query
-            url = "/query/#{$routeParams.query}"
+            url = "#{url}/query/#{$routeParams.query}"
         return url
 
     $scope.nextDocumentUrl = () ->
         url = "#/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }/idx/#{$scope.idx + 1}"
         if $routeParams.query
-            url = "/query/#{$routeParams.query}"
+            url = "#{url}/query/#{$routeParams.query}"
         return url
 
     $scope.hasPreviousDocument = () ->
