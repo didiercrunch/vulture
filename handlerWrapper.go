@@ -7,7 +7,7 @@ import (
 )
 
 type errorWrapper struct {
-	Error error `json:"error"`
+	Error string `json:"error"`
 }
 
 type ApiHandler func(w http.ResponseWriter, request *http.Request) (interface{}, error)
@@ -16,7 +16,7 @@ func (this ApiHandler) ServeHTTP(w http.ResponseWriter, request *http.Request) {
 	ret, err := this(w, request)
 	if err != nil {
 		log.Println(err)
-		ret = &errorWrapper{err}
+		ret = &errorWrapper{err.Error()}
 		w.WriteHeader(500)
 	} else {
 		w.WriteHeader(200)

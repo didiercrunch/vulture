@@ -68,6 +68,12 @@ root.controllers.controller('documentCtrl', ['$scope', '$routeParams', '$http', 
     $scope.idx = Number($routeParams.idx) or 1
     $scope.meta = {}
     $scope.newQuery = $routeParams.query or ""
+    $scope.notfound = false
+    $scope.error = ""
+    $scope.codeMirrorOptions =
+        lineWrapping : true
+        lineNumbers: true
+        mode: 'text/typescript'
     
     url  = "/api/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }"
     if $routeParams.query
@@ -80,6 +86,11 @@ root.controllers.controller('documentCtrl', ['$scope', '$routeParams', '$http', 
     $http.get(url).then((res) ->
          $scope.doc = res.data.document
          $scope.meta = res.data.meta
+    ).catch( (res) ->
+        if res.data.error == "not found"
+            $scope.notfound = true
+        else
+            $scope.error = res.data.error
     )
     
     $scope.parseQueryToJSON = (query) ->

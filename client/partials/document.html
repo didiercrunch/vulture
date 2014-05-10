@@ -9,8 +9,22 @@
                     Query <i class="fa fa-thumbs-o-down" style="color:red;" ng-show="getQueryPath()=='' && newQuery != ''"></i>
                 </a>
             </li>
-            <li><a class="button tiny" ng-click="newQuery=''" ng-class="{disabled: newQuery=='' }">Clear</a></li>
+            <li>
+                <a class="button tiny" ng-click="newQuery=''" ng-class="{disabled: newQuery=='' }">Clear</a>
+            </li>
+            <li>
+                <a class="button tiny" ng-click="bigInput = !bigInput" >
+                    <i class="fa fa-pencil-square-o" ng-show="!bigInput"></i>
+                    <i class="fa fa-minus-square-o" ng-show="bigInput"></i>
+                </a>
+            </li>
         </ul>
+    </div>
+</div>
+
+<div class="row" ng-show="bigInput">
+    <div class="large-12 columns">
+        <ui-codemirror ng-model="newQuery" ui-codemirror="codeMirrorOptions"  ></ui-codemirror>
     </div>
 </div>
 
@@ -19,6 +33,15 @@
             <a class="fa fa-chevron-left" ng-href="{{ previousDocumentUrl() }}" ng-show="{{ hasPreviousDocument() }}"></a>
             <kbd>{{idx}} / {{ meta.count || 0  | number | replaceAllCommasBySpaces }}</kbd>
             <a class="fa fa-chevron-right" ng-href="{{ nextDocumentUrl() }}"></a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="large-12 columns" style="text-align: center;" ng-show="!closeAlert && notfound">
+            <div class="alert-box">
+                No document Found!
+                <a class="close" ng-click="closeAlert=true">&times;</a>
+            </div>
     </div>
 </div>
 

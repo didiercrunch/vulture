@@ -3,6 +3,7 @@ root = this;
 
 angular.module('vulture', [
   'ngRoute'
+  'ui.codemirror'
   'leaflet-directive'
   'vulture.filters'
   'vulture.services'
