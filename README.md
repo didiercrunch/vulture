@@ -1,5 +1,14 @@
-Mongo db explorer in a web interface.  The project is inspired by [mongs](http://whit537.org/mongs/) but have the following extra goals.
+# Vulture ![general view](client/images/vulture.svg)
 
-*  support for gridFs
-*  support for [GeoJson](http://geojson.org/)
-*  filters in the browser
+An advanced [MongoDB](http://www.mongodb.org/) explorer in a web interface.  the
+project is inspired by [mongs](http://whit537.org/mongs/) but has the additional goal
+of new features.
+
+*   Support for [GeoJson](http://geojson.org/) indexes.
+*   Support for GridFS
+
+### screenshots
+
+![general view](screenshots/screenshot_1.png)
+
+![geojson view](screenshots/screenshot_2.png)
