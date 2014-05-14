@@ -19,7 +19,9 @@ config(['$routeProvider', ($routeProvider) ->
   $routeProvider.when('/:server/:database/:collection/_id/:id/field/:field', {templateUrl: 'partials/field.html', controller: 'fieldCtrl'})
   $routeProvider.when('/:server/:database/:collection/idx/:idx', {templateUrl: 'partials/document.html', controller: 'documentCtrl'})
   $routeProvider.when('/:server/:database/:collection/idx/:idx/query/:query', {templateUrl: 'partials/document.html', controller: 'documentCtrl'})
+  $routeProvider.when('/:server/:database/:collection/idx/all/geojson/:key', {templateUrl: 'partials/geojsonmap.html', controller: 'geojsonmapCtrl'})
   $routeProvider.when('/:server/:database/:collection/idx/:idx/geojson/:key', {templateUrl: 'partials/geojsonmap.html', controller: 'geojsonmapCtrl'})
+  $routeProvider.when('/:server/:database/:collection/idx/all/query/:query/geojson/:key', {templateUrl: 'partials/geojsonmap.html', controller: 'geojsonmapCtrl'})
   $routeProvider.when('/:server/:database/:collection/idx/:idx/query/:query/geojson/:key', {templateUrl: 'partials/geojsonmap.html', controller: 'geojsonmapCtrl'})
   
   $routeProvider.otherwise({redirectTo: '/servers'})

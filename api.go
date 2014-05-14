@@ -74,6 +74,9 @@ func (this *VultureBackend) getIndexes() (interface{}, error) {
 
 func (this *VultureBackend) getMetaData(query *mgo.Query) (map[string]interface{}, error) {
 	meta := make(map[string]interface{})
+	if query == nil {
+		return meta, nil
+	}
 	var err error
 	if meta["count"], err = query.Count(); err != nil {
 		return meta, err
@@ -95,7 +98,7 @@ func (this *VultureBackend) GetDocumentByIndex(index int, query interface{}) (ma
 	return this.wrapDocumentWithMetadata(doc, queryResult)
 }
 
-func (this *VultureBackend) wrapDocumentWithMetadata(doc map[string]interface{}, query *mgo.Query) (map[string]interface{}, error) {
+func (this *VultureBackend) wrapDocumentWithMetadata(doc interface{}, query *mgo.Query) (map[string]interface{}, error) {
 	ret := make(map[string]interface{})
 	var err error
 	ret["document"] = doc
@@ -103,6 +106,18 @@ func (this *VultureBackend) wrapDocumentWithMetadata(doc map[string]interface{},
 		return ret, err
 	}
 	return ret, nil
+}
+
+func (this *VultureBackend) GetAllDocuments(query interface{}) (interface{}, error) {
+	var result []map[string]interface{}
+
+	iter := this.Collection.Find(query).Iter()
+	iter.All(&result)
+	if err := iter.Close(); err != nil {
+		return nil, err
+	}
+
+	return this.wrapDocumentWithMetadata(result, nil)
 }
 
 func getAvailableServers(w http.ResponseWriter, request *http.Request) (interface{}, error) {
@@ -140,6 +155,23 @@ func getDocumentByIndex(w http.ResponseWriter, request *http.Request) (interface
 		return nil, errors.New("index field is not an inteder ( " + indexAsString + ")")
 	}
 	return vb.GetDocumentByIndex(index, nil)
+}
+
+func getAllDocuments(w http.ResponseWriter, request *http.Request) (interface{}, error) {
+	vb, err := GetVultureBackend(request)
+	if err != nil {
+		return nil, err
+	}
+	vars := mux.Vars(request)
+	queryString, ok := vars["query"]
+	if !ok || queryString == "" {
+		return vb.GetAllDocuments(nil)
+	}
+	query := make(map[string]interface{})
+	if err := json.Unmarshal([]byte(queryString), &query); err != nil {
+		return nil, errors.New("invalid json")
+	}
+	return vb.GetAllDocuments(query)
 }
 
 func getDocumentById(w http.ResponseWriter, request *http.Request) (interface{}, error) {
