@@ -1,8 +1,13 @@
 root = this;
+
+
+
 mapCenter =
     lat: 46.1227
     lng: -72.6169
     zoom: 7
+
+
 
 getSingleDataUrl = (routeParams) ->
     url = "/api/#{ routeParams.server }/#{ routeParams.database }/#{ routeParams.collection }"
@@ -21,14 +26,19 @@ getDocumentUrl = (routeParams, id) ->
 
 transformListOfGeoJsonToGeometryCollection = (resData, routeParams) ->
     ret =
-        type: "GeometryCollection"
-        geometries: []
+        type: "FeatureCollection"
+        features: []
     for doc in resData.document
         geojson = doc[routeParams.key]
         if not geojson.properties
             geojson.properties = {}
         geojson.properties["_vulture_url_link"] = getDocumentUrl(routeParams, doc._id)
-        ret.geometries.push(geojson)
+        feature =
+            type: "Feature"
+            geometry: geojson,
+            properties:
+                "_vulture_url_link": getDocumentUrl(routeParams, doc._id)
+        ret.features.push(geojson)
     return ret
     
 
