@@ -1,7 +1,7 @@
 root = this;
 
 root.filters.filter 'escape', () ->
-  return window.escape;
+  return window.encodeURIComponent;
 
 
 root.filters.filter 'replaceAllCommasBySpaces', () ->

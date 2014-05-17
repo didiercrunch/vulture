@@ -14,10 +14,26 @@ import (
 const PARAM_FILE string = "params.yml"
 const STATIC_DIR string = "client"
 
+type MongoServer struct {
+	Name string `yaml:"name"`
+	Url  string `yaml:"url"`
+}
+
+type MongoServers []*MongoServer
+
+func (this MongoServers) GetServerUrl(name string) (url string, found bool) {
+	for _, server := range this {
+		if server.Name == name {
+			return server.Url, true
+		}
+	}
+	return "", false
+}
+
 type Params struct {
-	Port           int      `yaml:"Port,omitempty"`
-	ServingAddress string   `yaml:"ServingAddress,omitempty"`
-	MongoServers   []string `yaml:"MongoServers,omitempty"`
+	Port           int          `yaml:"Port,omitempty"`
+	ServingAddress string       `yaml:"ServingAddress,omitempty"`
+	MongoServers   MongoServers `yaml:"MongoServers,omitempty"`
 }
 
 func (this *Params) LoadFromYamlFile(fileName string) error {
@@ -47,7 +63,11 @@ func (this *Params) LoadFromYamlData(data []byte) error {
 	return nil
 }
 
-var params = &Params{8000, "localhost", []string{"localhost:27017"}}
+func GetDefaultParams() *Params {
+	return &Params{8000, "localhost", MongoServers{&MongoServer{Name: "localhost", Url: "localhost:27017"}}}
+}
+
+var params = GetDefaultParams()
 
 func init() {
 	if err := params.LoadFromYamlFile(PARAM_FILE); err != nil {

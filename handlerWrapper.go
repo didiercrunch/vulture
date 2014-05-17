@@ -13,6 +13,7 @@ type errorWrapper struct {
 type ApiHandler func(w http.ResponseWriter, request *http.Request) (interface{}, error)
 
 func (this ApiHandler) ServeHTTP(w http.ResponseWriter, request *http.Request) {
+	log.Println("request for", request.URL)
 	ret, err := this(w, request)
 	if err != nil {
 		log.Println(err)

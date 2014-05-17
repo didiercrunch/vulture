@@ -6,19 +6,25 @@ import (
 	"net/http/httptest"
 	"os"
 	"path"
-	"reflect"
 	"testing"
 )
 
-func TestLoadFromYamlDataAndInitialParams(t *testing.T) {
+func TestInitialParams(t *testing.T) {
+	params := GetDefaultParams()
 	if params.Port != 8000 {
 		t.Error("wrong port")
 	}
 	if params.ServingAddress != "localhost" {
 		t.Error("wrong png dpi")
 	}
-	if !reflect.DeepEqual(params.MongoServers, []string{"localhost:27017"}) {
-		t.Fail()
+	if len(params.MongoServers) != 1 {
+
+		t.Error("bad default number of mongo servers", len(params.MongoServers))
+		return
+	}
+	ms := params.MongoServers[0]
+	if ms.Name != "localhost" || ms.Url != "localhost:27017" {
+		t.Error("bad ms", ms)
 	}
 }
 
@@ -28,7 +34,6 @@ func createMockStaticFile() (*os.File, error) {
 		return nil, err
 	}
 	return f, ioutil.WriteFile(f.Name(), []byte("hello world"), 0600)
-
 }
 
 func TestServingStaticFiles(t *testing.T) {

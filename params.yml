@@ -12,5 +12,12 @@ Port: 8000
 #  should use `0.0.0.0`
 ServingAddress: localhost
 
+#  The list of mongo servers.  Each server is an object with a field *name* that will
+#  be shown in the web user interface and a *url* field that points to the mongo server
 MongoServers:
-    - localhost:27017
+    -
+      name: localhost
+      url: localhost:27017
+  # -
+  #  name: example
+  #  url: mongodb://username:password@ds90210.mongolab.com:52652/database_name

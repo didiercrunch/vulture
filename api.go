@@ -8,10 +8,12 @@ import (
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
 	"net/http"
+	"net/url"
 	"strconv"
 )
 
 type VultureBackend struct {
+	MongoURL   string
 	Client     *mgo.Session
 	Db         *mgo.Database
 	Collection *mgo.Collection
@@ -20,20 +22,25 @@ type VultureBackend struct {
 func GetVultureBackend(req *http.Request) (*VultureBackend, error) {
 	vars := mux.Vars(req)
 
-	serverURL, ok := vars["server"]
+	serverName, ok := vars["server"]
 	if !ok {
 		return nil, errors.New("server field not specified")
 	}
-	client, err := shared.GetMongoClient(serverURL)
+	mongoURL, ok := params.MongoServers.GetServerUrl(serverName)
+	if !ok {
+		return nil, errors.New("no server for asked name.")
+	}
+
+	client, err := shared.GetMongoClient(mongoURL)
 	if err != nil {
 		return nil, err
 	}
-	vb := &VultureBackend{Client: client}
-	vb.setDatabaseCollection(req)
+	vb := &VultureBackend{Client: client, MongoURL: mongoURL}
+	vb.setDatabaseAndCollection(req)
 	return vb, nil
 }
 
-func (this *VultureBackend) setDatabaseCollection(req *http.Request) {
+func (this *VultureBackend) setDatabaseAndCollection(req *http.Request) {
 	vars := mux.Vars(req)
 	database, ok := vars["database"]
 	if !ok {
@@ -49,7 +56,23 @@ func (this *VultureBackend) setDatabaseCollection(req *http.Request) {
 }
 
 func (this *VultureBackend) GetDataBases() ([]string, error) {
-	return this.Client.DatabaseNames()
+
+	dbs, err := this.Client.DatabaseNames()
+	if err == nil {
+		return dbs, nil
+	} else if err.Error() == "unauthorized" {
+		return this.getDatabaseFromMongoURL()
+	} else {
+		return nil, err
+	}
+}
+
+func (this *VultureBackend) getDatabaseFromMongoURL() ([]string, error) {
+	u, e := url.Parse(this.MongoURL)
+	if e != nil {
+		return nil, errors.New("cannot extract database from url")
+	}
+	return []string{u.Path[1:len(u.Path)]}, nil
 }
 
 func (this *VultureBackend) GetCollections() ([]string, error) {
@@ -121,7 +144,11 @@ func (this *VultureBackend) GetAllDocuments(query interface{}) (interface{}, err
 }
 
 func getAvailableServers(w http.ResponseWriter, request *http.Request) (interface{}, error) {
-	return params.MongoServers, nil
+	ret := make([]string, len(params.MongoServers))
+	for i, ms := range params.MongoServers {
+		ret[i] = ms.Name
+	}
+	return ret, nil
 }
 
 func getAvailableDataBases(w http.ResponseWriter, request *http.Request) (interface{}, error) {
