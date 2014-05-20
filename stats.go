@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 )
 
 var _ = fmt.Print
@@ -9,6 +10,12 @@ var _ = fmt.Print
 const initialLength int = 1024
 const verySmall float64 = -100000
 const veryBig float64 = 100000
+
+type Stats struct {
+	Mean float64 `json:"mean"`
+	Var  float64 `json:"var"`
+	Std  float64 `json:"std"`
+}
 
 type StatAggregator struct {
 	sum             float64
@@ -18,8 +25,6 @@ type StatAggregator struct {
 	min             float64
 	max             float64
 }
-
-type Stats struct{}
 
 func NewStatAggregator() *StatAggregator {
 	return &StatAggregator{0, 0, 0, make([]float64, initialLength), veryBig, verySmall}
@@ -37,5 +42,15 @@ func (this *StatAggregator) AddStats(dataChannel chan float64, output chan *Stat
 			this.max = datum
 		}
 	}
-	output <- nil
+	output <- this.getFinalStats()
+}
+
+func (this *StatAggregator) getFinalStats() *Stats {
+	stats := new(Stats)
+	stats.Mean = this.sum / float64(this.n)
+	stats.Var = this.sumOfTheSquares/float64(this.n) - stats.Mean*stats.Mean
+	stats.Std = math.Sqrt(stats.Var)
+
+	return stats
+
 }

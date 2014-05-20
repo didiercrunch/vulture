@@ -3,14 +3,11 @@
     
     <span ng-style="{visibility: showTools ? 'inline': 'hidden'}">
         <!-- place to but some hoover information-->
-        <i class="fa fa-signal" ng-show="canMakeHistogram"></i> 
+        <a ng-href="{{ statsUrl }}"><i class="fa fa-signal" ng-show="canMakeHistogram"></i></a>
     </span>
     <span class="right" style="color:#008CBA;">
         <i class="fa fa-sort-numeric-asc" ng-show="hasIndexAsc"></i>
         <i class="fa fa-sort-numeric-desc" ng-show="hasIndexDesc"></i>
         <a class="fa fa-globe" ng-show="has2DIndex" ng-href="{{ getGeoJsonUrl() }}" target="_blank"></a>
     </span>
-    
-    
-    
 </span>

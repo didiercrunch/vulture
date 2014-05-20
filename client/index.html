@@ -31,7 +31,7 @@
         <div class="large-12 columns">
             <ul class="breadcrumbs">
                 <li ng-repeat="p in path" ng-class="{current: $last, unavailable: getHistoryUrl($index)== ''}">
-                    <a ng-href="{{getHistoryUrl($index)}}"> {{ p }} </a>
+                    <a ng-href="{{getHistoryUrl($index)}}" ng-bind="p"> </a>
                 </li>
             </ul>
         </div>
@@ -60,6 +60,7 @@
     <script src="js/controllers/documentCtrl.js"></script>
     <script src="js/controllers/geojsonmapCtrl.js"></script>
     <script src="js/controllers/fieldCtrl.js"></script>
+    <script src="js/controllers/keyStatCtrl.js"></script>
     
     <script src="js/directives/key.js"></script>
     <script src="js/directives/value.js"></script>

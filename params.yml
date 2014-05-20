@@ -18,6 +18,6 @@ MongoServers:
     -
       name: localhost
       url: localhost:27017
-  # -
-  #  name: example
-  #  url: mongodb://username:password@ds90210.mongolab.com:52652/database_name
+    -
+      name: mongolab
+      url: mongodb://ustraca:9OApiiV9En85bBFGfVyYKH4C@ds049288.mongolab.com:49288/ustraca

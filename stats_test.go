@@ -33,3 +33,20 @@ func TestAddStatsBasic(t *testing.T) {
 	}
 
 }
+
+func TestGetFinalStats(t *testing.T) {
+	s := NewStatAggregator()
+	s.sumOfTheSquares = 5000
+	s.sum = 200
+	s.n = 10
+	stats := s.getFinalStats()
+	if stats.Mean != 20. {
+		t.Fail()
+	}
+	if stats.Var != 100. {
+		t.Fail()
+	}
+	if stats.Std != 10. {
+		t.Fail()
+	}
+}
