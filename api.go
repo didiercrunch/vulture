@@ -131,6 +131,33 @@ func (this *VultureBackend) wrapDocumentWithMetadata(doc interface{}, query *mgo
 	return ret, nil
 }
 
+func (this *VultureBackend) GetStat(key string) (interface{}, error) {
+	s := NewStatAggregator()
+	query := bson.M{key: bson.M{"$exists": true}}
+	iter := this.Collection.Find(query).Select(bson.M{key: 1}).Iter()
+	result := make(map[string]interface{})
+
+	in := make(chan float64)
+	out := make(chan *Stats)
+	go s.AddStats(in, out)
+
+	for iter.Next(&result) {
+
+		if val, ok := result[key]; ok {
+			if fval, isFloat := val.(float64); isFloat {
+				in <- fval
+			} else if ival, isInt := val.(int); isInt {
+				in <- float64(ival)
+			}
+		}
+	}
+	close(in)
+	if err := iter.Close(); err != nil {
+		return nil, err
+	}
+	return <-out, nil
+}
+
 func (this *VultureBackend) GetAllDocuments(query interface{}) (interface{}, error) {
 	var result []map[string]interface{}
 
@@ -240,4 +267,18 @@ func getDocumentByQueryAndIndex(w http.ResponseWriter, request *http.Request) (i
 		return nil, errors.New("invalid json")
 	}
 	return vb.GetDocumentByIndex(index, query)
+}
+
+func getStats(w http.ResponseWriter, request *http.Request) (interface{}, error) {
+	vb, err := GetVultureBackend(request)
+	if err != nil {
+		return nil, err
+	}
+
+	vars := mux.Vars(request)
+	key, ok := vars["key"]
+	if !ok {
+		return nil, errors.New("key field not specified")
+	}
+	return vb.GetStat(key)
 }

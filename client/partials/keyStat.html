@@ -1,0 +1,11 @@
+
+<div class="row">
+    <div class="columns large-12">
+        <ul class="pricing-table">
+            <li class="title" ng-bind="name"></li>
+            <li class="bullet-item" ng-repeat="stat in stats">
+                <code>{{stat.name}} : {{stat.value  | number | replaceAllCommasBySpaces }}</code>
+            </li>
+        </ul>
+    </div>    
+</div>

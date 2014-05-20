@@ -15,6 +15,10 @@ hasIndexDesc = (keyName, indexes) ->
 has2dIndex = (keyName, indexes) ->
     hasIndex("$2dsphere:#{keyName}", indexes)
 
+getStatsUrl = (keyName, routeParams)->
+    r = routeParams
+    "#/#{r.server}/#{r.database}/#{r.collection}/stats/#{ keyName }"
+
 directive = () ->
     directive = 
         templateUrl: "/partials/directives/key.html"
@@ -27,6 +31,7 @@ directive = () ->
             indexes: "="
         controller:["$scope", "$routeParams", ($scope, $routeParams) ->
                 $scope.canMakeHistogram = _.isNumber($scope.value)
+                $scope.statsUrl = getStatsUrl($scope.keyName, $routeParams)
                 $scope.hasIndexDesc = hasIndexDesc($scope.keyName, $scope.indexes)
                 $scope.hasIndexAsc = hasIndexAsc($scope.keyName, $scope.indexes)
                 $scope.has2DIndex = has2dIndex($scope.keyName, $scope.indexes)
