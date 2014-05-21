@@ -4,6 +4,7 @@ root = this;
 angular.module('vulture', [
   'ngRoute'
   'ui.codemirror'
+  'angularSpinner'
   'leaflet-directive'
   'vulture.filters'
   'vulture.services'

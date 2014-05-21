@@ -10,7 +10,7 @@ Port: 8000
 #  The address where the service will run.  If you wish to run it on your computer, you
 #  should use `localhost`.  If you wish to share the service on your local network, you
 #  should use `0.0.0.0`
-ServingAddress: localhost
+ServingAddress: 0.0.0.0
 
 #  The list of mongo servers.  Each server is an object with a field *name* that will
 #  be shown in the web user interface and a *url* field that points to the mongo server

@@ -1,10 +1,10 @@
 root = this;
 
 
-root.controllers.controller('databasesCtrl', ['$scope', '$routeParams', '$http', ($scope, $routeParams, $http) ->
+root.controllers.controller('databasesCtrl', ['$scope', '$routeParams', 'util', ($scope, $routeParams, util) ->
     $scope.server = $routeParams.server
     $scope.databases = []
-    $http.get("/api/#{ $routeParams.server }/databases").then((res) ->
+    util.get("/api/#{ $routeParams.server }/databases").then((res) ->
         $scope.databases = res.data
     )
     

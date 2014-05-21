@@ -62,7 +62,7 @@ testmongoJsToMongoJSON = () ->
 
 testmongoJsToMongoJSON()
 
-root.controllers.controller('documentCtrl', ['$scope', '$routeParams', '$http', ($scope, $routeParams, $http) ->
+root.controllers.controller('documentCtrl', ['$scope', '$routeParams', 'util', ($scope, $routeParams, util) ->
     $scope.idx = $routeParams.idx
     $scope.doc = {}
     $scope.idx = Number($routeParams.idx) or 1
@@ -83,7 +83,7 @@ root.controllers.controller('documentCtrl', ['$scope', '$routeParams', '$http', 
     else if $routeParams.id
         url = "#{ url }/_id/#{$routeParams.id}"
 
-    $http.get(url).then((res) ->
+    util.get(url).then((res) ->
          $scope.doc = res.data.document
          $scope.meta = res.data.meta
     ).catch( (res) ->

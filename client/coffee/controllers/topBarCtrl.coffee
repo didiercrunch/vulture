@@ -5,6 +5,9 @@ joinArray = (a, b)->
     return a
 
 root.controllers.controller('topBarCtrl', ['$scope', '$location', ($scope, $location) ->
+    
+    $scope.loading = false
+    
     $scope.$on('$routeChangeSuccess', (next, current) ->
         $scope.path = _.filter($location.path().split("/"), (s) -> s)
         if $scope.path[5] == "query"
@@ -23,4 +26,9 @@ root.controllers.controller('topBarCtrl', ['$scope', '$location', ($scope, $loca
                 ret += "/#{ $scope.path[4] }"
             return ret
     )
+    $scope.$on "loading", ()->
+        $scope.loading = true
+    
+    $scope.$on "loadingFinished", ()->
+        $scope.loading = false
  ])

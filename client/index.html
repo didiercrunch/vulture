@@ -21,19 +21,25 @@
 
 </head>
 <body>
-    <div class="row">
-        <div class="large-12 columns">
-            <h3 style="font-family: 'Rock Salt', cursive;">
-                <img src="images/vulture.svg" width="50px" style="margin-right: 100px; "> Vulture</h3>
+    <div ng-controller="topBarCtrl">
+        <div class="row">
+            <div class="large-12 columns">
+                <h3 style="font-family: 'Rock Salt', cursive;">
+                    <img src="images/vulture.svg" width="50px" style="margin-right: 100px; "> Vulture
+                    <span style="position: absolute;left: 40px; top: 45px; z-index:-1;" ng-show="loading">
+                        <span us-spinner="{radius:20, width:8, length: 16}"></span>
+                    </span>
+                </h3>
+            </div>
         </div>
-    </div>
-    <div class="row" ng-controller="topBarCtrl">
-        <div class="large-12 columns">
-            <ul class="breadcrumbs">
-                <li ng-repeat="p in path" ng-class="{current: $last, unavailable: getHistoryUrl($index)== ''}">
-                    <a ng-href="{{getHistoryUrl($index)}}" ng-bind="p"> </a>
-                </li>
-            </ul>
+        <div class="row" >
+            <div class="large-12 columns">
+                <ul class="breadcrumbs">
+                    <li ng-repeat="p in path" ng-class="{current: $last, unavailable: getHistoryUrl($index)== ''}">
+                        <a ng-href="{{getHistoryUrl($index)}}" ng-bind="p"> </a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
     
@@ -47,12 +53,15 @@
     <script src="bower_components/foundation/js/foundation.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
+    <script src="bower_components/spin.js/spin.js"></script>
+    <script src="bower_components/angular-spinner/angular-spinner.js"></script>
     <script type="text/javascript" src="bower_components/angular-ui-codemirror/ui-codemirror.js"></script>
 
     
       
     <script src="js/vultureApp.js"></script>
     <script src="js/filters.js"></script>
+    <script src="js/services.js"></script>
     <script src="js/controllers/homeCtrl.js"></script>
     <script src="js/controllers/serversCtrl.js"></script>
     <script src="js/controllers/databasesCtrl.js"></script>

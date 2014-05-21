@@ -42,7 +42,7 @@ transformListOfGeoJsonToGeometryCollection = (resData, routeParams) ->
     return ret
     
 
-root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$location', '$http', ($scope, $routeParams, $location, $http) ->
+root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$location', 'util', ($scope, $routeParams, $location, util) ->
     $scope.geojson = {}
     $scope.geojsonData = {}
     $scope.idx = Number($routeParams.idx)
@@ -75,7 +75,7 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$locat
     
     $scope.initSingleDocument = ()->
         url = getSingleDataUrl($routeParams)
-        $http.get(url).then (res) ->
+        util.get(url).then (res) ->
             geojson = res.data.document[$routeParams.key]
             if not geojson.properties
                 geojson.properties = {}
@@ -88,7 +88,7 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$locat
 
     $scope.initAllDocuments = () ->
         url = getAllDataUrl($routeParams)
-        $http.get(url).then (res) ->
+        util.get(url).then (res) ->
             $scope.meta = res.data.meta
             $scope.geojsonData =
                 data: transformListOfGeoJsonToGeometryCollection(res.data, $routeParams)
