@@ -96,7 +96,6 @@ func serveApi(router *mux.Router) {
 	router.Handle("/{server}/{database}/{collection}/query/{query}/idx/{index:[0-9]+}", ApiHandler(getDocumentByQueryAndIndex))
 	router.Handle("/{server}/{database}/{collection}/query/{query}/all", ApiHandler(getAllDocuments))
 
-	// getAllDocuments
 }
 
 func createMuxRouter() http.Handler {

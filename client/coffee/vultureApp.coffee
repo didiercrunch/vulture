@@ -5,6 +5,7 @@ angular.module('vulture', [
   'ngRoute'
   'ui.codemirror'
   'angularSpinner'
+  'highcharts-ng'
   'leaflet-directive'
   'vulture.filters'
   'vulture.services'

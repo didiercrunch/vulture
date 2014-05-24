@@ -37,6 +37,8 @@ func TestAddStatsBasic(t *testing.T) {
 func TestGetFinalStats(t *testing.T) {
 	s := NewStatAggregator()
 	s.sumOfTheSquares = 5000
+	s.max = 900
+	s.min = -900
 	s.sum = 200
 	s.n = 10
 	stats := s.getFinalStats()
@@ -49,4 +51,64 @@ func TestGetFinalStats(t *testing.T) {
 	if stats.Std != 10. {
 		t.Fail()
 	}
+	if stats.Min != -900 {
+		t.Fail()
+	}
+	if stats.Max != 900 {
+		t.Fail()
+	}
+	if stats.N != 10 {
+		t.Fail()
+	}
+}
+
+func TestFindMinHistogramValue(t *testing.T) {
+	stats := &Stats{
+		Mean: 10,
+		Std:  2,
+		Min:  1,
+	}
+
+	if stats.findMinHistogramValue() != 4 {
+		t.Fail()
+	}
+
+	stats.Min = 7
+	if stats.findMinHistogramValue() != 7 {
+		t.Fail()
+	}
+
+}
+
+func TestFindMaxHistogramValue(t *testing.T) {
+	stats := &Stats{
+		Mean: 10,
+		Std:  2,
+		Max:  22,
+	}
+
+	if stats.findMaxHistogramValue() != 16 {
+		t.Fail()
+	}
+
+	stats.Max = 14
+	if stats.findMaxHistogramValue() != 14 {
+		t.Fail()
+	}
+}
+
+func TestFindSuitableBinForDatum(t *testing.T) {
+	stats := new(Stats)
+	if bin := stats.findSuitableBinForDatum(-4, 1, -3.2); bin != 0 {
+		t.Error("wrong bin: ", bin)
+	}
+
+	if bin := stats.findSuitableBinForDatum(-4, 1, -2.2); bin != 1 {
+		t.Error("wrong bin: ", bin)
+	}
+
+	if bin := stats.findSuitableBinForDatum(-4, 1, 10.1); bin != 14 {
+		t.Error("wrong bin: ", bin)
+	}
+
 }
