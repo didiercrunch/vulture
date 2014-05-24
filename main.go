@@ -92,6 +92,7 @@ func serveApi(router *mux.Router) {
 	router.Handle("/{server}/{database}/{collection}/idx/{index:[0-9]+}", ApiHandler(getDocumentByIndex))
 	router.Handle("/{server}/{database}/{collection}/_id/{id}", ApiHandler(getDocumentById))
 	router.Handle("/{server}/{database}/{collection}/stats/{key}", ApiHandler(getStats))
+	router.Handle("/{server}/{database}/{collection}/histogram/{key}/{min}/{max}/{number_of_bins}", ApiHandler(getHistogram))
 	router.Handle("/{server}/{database}/{collection}/all", ApiHandler(getAllDocuments))
 	router.Handle("/{server}/{database}/{collection}/query/{query}/idx/{index:[0-9]+}", ApiHandler(getDocumentByQueryAndIndex))
 	router.Handle("/{server}/{database}/{collection}/query/{query}/all", ApiHandler(getAllDocuments))

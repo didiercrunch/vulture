@@ -21,3 +21,7 @@ MongoServers:
     -
       name: mongolab
       url: mongodb://ustraca:9OApiiV9En85bBFGfVyYKH4C@ds049288.mongolab.com:49288/ustraca
+
+    -
+     name: miaou
+     url: 192.168.1.10:27017

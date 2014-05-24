@@ -158,6 +158,33 @@ func (this *VultureBackend) GetStat(key string) (interface{}, error) {
 	return <-out, nil
 }
 
+func (this *VultureBackend) GetHistogram(key string, min, max float64, numberOfBins int) (interface{}, error) {
+	hm := &HistogramMaker{min, max, numberOfBins}
+	query := bson.M{key: bson.M{"$exists": true}}
+	iter := this.Collection.Find(query).Select(bson.M{key: 1}).Iter()
+	result := make(map[string]interface{})
+
+	in := make(chan float64)
+	out := make(chan *Histogram)
+	go hm.MakeHistogram(in, out)
+
+	for iter.Next(&result) {
+		if val, ok := result[key]; ok {
+			if fval, isFloat := val.(float64); isFloat {
+				in <- fval
+			} else if ival, isInt := val.(int); isInt {
+				in <- float64(ival)
+			}
+		}
+	}
+	close(in)
+	if err := iter.Close(); err != nil {
+		return nil, err
+	}
+	return <-out, nil
+
+}
+
 func (this *VultureBackend) GetAllDocuments(query interface{}) (interface{}, error) {
 	var result []map[string]interface{}
 
@@ -281,4 +308,42 @@ func getStats(w http.ResponseWriter, request *http.Request) (interface{}, error)
 		return nil, errors.New("key field not specified")
 	}
 	return vb.GetStat(key)
+}
+
+func getHistogram(w http.ResponseWriter, request *http.Request) (interface{}, error) {
+	vb, err := GetVultureBackend(request)
+	vars := mux.Vars(request)
+	smin, ok := vars["min"]
+	if !ok {
+		return nil, errors.New("min field not specified")
+	}
+	min, err := strconv.ParseFloat(smin, 64)
+	if err != nil {
+		return nil, errors.New("min value is not an float64")
+	}
+
+	smax, ok := vars["max"]
+	if !ok {
+		return nil, errors.New("max field not specified")
+	}
+	max, err := strconv.ParseFloat(smax, 64)
+	if err != nil {
+		return nil, errors.New("max value is not an float64")
+	}
+	sNumberOfBins, ok := vars["number_of_bins"]
+	if !ok {
+		return nil, errors.New("number_of_bins field not specified")
+	}
+	numberOfBins, err := strconv.Atoi(sNumberOfBins)
+	if err != nil {
+		return nil, errors.New("numberOfBins value is not an int")
+	}
+
+	key, ok := vars["key"]
+	if !ok {
+		return nil, errors.New("key field not specified")
+	}
+
+	return vb.GetHistogram(key, min, max, numberOfBins)
+
 }

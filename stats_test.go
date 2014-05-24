@@ -62,43 +62,8 @@ func TestGetFinalStats(t *testing.T) {
 	}
 }
 
-func TestFindMinHistogramValue(t *testing.T) {
-	stats := &Stats{
-		Mean: 10,
-		Std:  2,
-		Min:  1,
-	}
-
-	if stats.findMinHistogramValue() != 4 {
-		t.Fail()
-	}
-
-	stats.Min = 7
-	if stats.findMinHistogramValue() != 7 {
-		t.Fail()
-	}
-
-}
-
-func TestFindMaxHistogramValue(t *testing.T) {
-	stats := &Stats{
-		Mean: 10,
-		Std:  2,
-		Max:  22,
-	}
-
-	if stats.findMaxHistogramValue() != 16 {
-		t.Fail()
-	}
-
-	stats.Max = 14
-	if stats.findMaxHistogramValue() != 14 {
-		t.Fail()
-	}
-}
-
 func TestFindSuitableBinForDatum(t *testing.T) {
-	stats := new(Stats)
+	stats := new(HistogramMaker)
 	if bin := stats.findSuitableBinForDatum(-4, 1, -3.2); bin != 0 {
 		t.Error("wrong bin: ", bin)
 	}
@@ -108,6 +73,9 @@ func TestFindSuitableBinForDatum(t *testing.T) {
 	}
 
 	if bin := stats.findSuitableBinForDatum(-4, 1, 10.1); bin != 14 {
+		t.Error("wrong bin: ", bin)
+	}
+	if bin := stats.findSuitableBinForDatum(1, 50, 1); bin != 0 {
 		t.Error("wrong bin: ", bin)
 	}
 

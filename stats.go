@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math"
 )
 
@@ -17,6 +18,43 @@ type Histogram struct {
 	Values   []int   `json:"values"`
 }
 
+type HistogramMaker struct {
+	Min          float64
+	Max          float64
+	NumberOfBins int
+}
+
+func (this *HistogramMaker) findSuitableBinForDatum(min, step, val float64) int {
+	var i int
+	var act float64 = min
+	for i = 0; act <= val; act += step {
+		i++
+	}
+	return i - 1
+
+}
+
+func (this *HistogramMaker) MakeHistogram(dataChannel chan float64, outputChannel chan *Histogram) {
+
+	step := (this.Max - this.Min) / float64(this.NumberOfBins)
+	hist := make([]int, this.NumberOfBins)
+
+	for datum := range dataChannel {
+		if datum < this.Min || datum > this.Max {
+			continue
+		}
+		i := this.findSuitableBinForDatum(this.Min, step, datum)
+		if i >= len(hist) || i < 0 {
+			log.Println("what the fuck?!", this.Min, step, datum, i)
+		} else {
+			hist[i]++
+		}
+	}
+
+	outputChannel <- &Histogram{this.Min, step, hist}
+
+}
+
 type Stats struct {
 	Mean float64 `json:"mean"`
 	Var  float64 `json:"var"`
@@ -24,42 +62,6 @@ type Stats struct {
 	Min  float64 `json:"min"`
 	Max  float64 `json:"max"`
 	N    int     `json:"n"`
-}
-
-func (this *Stats) findMinHistogramValue() float64 {
-	return math.Max(this.Min, this.Mean-3*this.Std)
-}
-
-func (this *Stats) findMaxHistogramValue() float64 {
-	return math.Min(this.Max, this.Mean+3*this.Std)
-}
-
-func (this *Stats) findSuitableBinForDatum(min, step, val float64) int {
-	var i int
-	var act float64 = min
-	for i = 0; act < val; act += step {
-		i++
-	}
-	return i - 1
-
-}
-
-func (this *Stats) MakeHistogram(numberOfBins int, dataChannel chan float64, outputChannel chan *Histogram) {
-	min := this.findMinHistogramValue()
-	max := this.findMaxHistogramValue()
-	step := (max - min) / float64(numberOfBins)
-	hist := make([]int, numberOfBins)
-
-	for datum := range dataChannel {
-		if datum < min || datum > max {
-			continue
-		}
-		i := this.findSuitableBinForDatum(min, step, datum)
-		hist[i]++
-	}
-
-	outputChannel <- &Histogram{min, step, hist}
-
 }
 
 type StatAggregator struct {
