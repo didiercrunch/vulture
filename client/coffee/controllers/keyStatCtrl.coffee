@@ -26,6 +26,7 @@ root.controllers.controller('keyStatCtrl', ['$scope', '$routeParams', 'util', ($
     base_url  = "/api/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }"
     stat_url = "#{ base_url }/stats/#{$routeParams.key}"
 
+    $scope.alert=alert
     
     $scope.chartConfig =
         options:
@@ -58,7 +59,7 @@ root.controllers.controller('keyStatCtrl', ['$scope', '$routeParams', 'util', ($
         return util.get(histogram_url)
     ).then((res) ->
         $scope.chartConfig.series[0].data = res.data.values
-        $scope.chartConfig.xAxis.categories = getAxisLabel(res.data.min, res.data.step_size, res.values.length)
+        $scope.chartConfig.xAxis.categories = getAxisLabel(res.data.min, res.data.step_size, res.data.values.length)
     )
     
 ])

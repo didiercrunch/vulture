@@ -1,0 +1,31 @@
+<div>
+    <div class="row">
+        <div class="large-9 columns">
+            <input type="text" ng-model="newQuery" style="font-family: monospace;font-size: 1.2em;">
+        </div>
+        <div class="large-3 columns right">
+            <ul class="button-group">
+                <li>
+                    <a class="button tiny" ng-click="callCallback()" ng-class="{disabled: !isValidEntry() }">
+                        Query <i class="fa fa-thumbs-o-down" style="color:red;" ng-show="getQueryPath()=='' && newQuery != ''"></i>
+                    </a>
+                </li>
+                <li>
+                    <a class="button tiny" ng-click="newQuery=''" ng-class="{disabled: newQuery=='' }">Clear</a>
+                </li>
+                <li>
+                    <a class="button tiny" ng-click="bigInput = !bigInput" >
+                        <i class="fa fa-pencil-square-o" ng-show="!bigInput"></i>
+                        <i class="fa fa-minus-square-o" ng-show="bigInput"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="row" ng-show="bigInput">
+        <div class="large-12 columns">
+            <ui-codemirror ng-model="newQuery" ui-codemirror="codeMirrorOptions"  ></ui-codemirror>
+        </div>
+    </div>
+</div>
