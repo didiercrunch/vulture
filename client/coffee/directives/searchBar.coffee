@@ -68,10 +68,11 @@ directive = () ->
         transclude: false,
         restrict: 'E',
         scope:
-            query: "="
+            query: "@"
             callback: "="
         controller:["$scope", "$routeParams", ($scope, $routeParams) ->
                 $scope.bigInput = false
+                $scope.newQuery = $scope.query or ""
                 $scope.codeMirrorOptions =
                     lineWrapping : true
                     lineNumbers: true
@@ -94,7 +95,9 @@ directive = () ->
                 $scope.callCallback = () ->
                     query = $scope.parseQueryToJSON($scope.newQuery)
                     if query != ""
-                        $scope.$eval($scope.callback, query)
+                        f = () ->
+                            $scope.callback(query)
+                        $scope.$eval(f)
             ]
     return directive
                         

@@ -1,73 +1,12 @@
 root = this;
 
-mongoJsToMongoJSON = (queryString) ->
-    ObjectId = (id) ->
-        return {"$oid": id}
-    
-    DBRef = (name, id) ->
-        return {"$ref": name, "$id": id}
-    
-    Timestamp = (t, i) ->
-        return {"t": t, "i": i}
-    NumberLong = (number) ->
-        return { "$numberLong": String(number)}
-    MaxKey = { "$maxKey": 1 }
-    MinKey = { "$minKey": 1 }
-    
-    query = ""
-    eval("query = " + queryString)
-    fixQuery = (query) ->
-        if _.isArray(query)
-            for v, i in query
-                query[i] = fixQuery(v)
-            return query
-        if _.isRegExp(query)
-            options = ""
-            for k, option of {multiline: "m", global: "g", ignoreCase: "i"}
-                if query[k]
-                    options += option
-            return { "$regex": query.source, "$options": options }
-        if _.isDate(query)
-            return { "$date": query.getTime()}
-        if query == undefined
-            return { "$undefined": true }
-        if _.isObject(query)
-            for k, v of query
-                query[k] = fixQuery(v)
-            return query
-        return query
-    
-    return fixQuery(query)
 
-testmongoJsToMongoJSON = () ->
-    assertEqual = (a, b) ->
-        if not _.isEqual(a, b)
-            console.log("error! ", a, " != ", b)
-    s = """{a: 89}"""
-    assertEqual(mongoJsToMongoJSON(s), {a : 89})
-    s = """{a: [1,3,{reg: /allo/gim}]}"""
-    assertEqual(mongoJsToMongoJSON(s), {a: [1,3, {reg: { "$regex":"allo", "$options": "mgi" }}]})
-    s = """{a: [
-                1,
-                3,
-                {reg:
-                    [/allo/gim,
-                     new Date("2014-05-08T21:52:24.320Z")
-                     ]
-                }
-                ]
-            }"""
-    assertEqual(mongoJsToMongoJSON(s), {a: [1,3, {reg: [{ "$regex":"allo", "$options": "mgi" }, {"$date": 1399585944320}]}]})
-    
-
-testmongoJsToMongoJSON()
-
-root.controllers.controller('documentCtrl', ['$scope', '$routeParams', 'util', ($scope, $routeParams, util) ->
+root.controllers.controller('documentCtrl', ['$scope', '$routeParams', '$location', 'util', ($scope, $routeParams, $location, util) ->
     $scope.idx = $routeParams.idx
     $scope.doc = {}
     $scope.idx = Number($routeParams.idx) or 1
     $scope.meta = {}
-    $scope.newQuery = $routeParams.query or ""
+    $scope.query = $routeParams.query or ""
     $scope.notfound = false
     $scope.error = ""
     $scope.codeMirrorOptions =
@@ -93,20 +32,10 @@ root.controllers.controller('documentCtrl', ['$scope', '$routeParams', 'util', (
             $scope.error = res.data.error
     )
     
-    $scope.parseQueryToJSON = (query) ->
-        try
-            ret = JSON.stringify(mongoJsToMongoJSON(query))
-            $scope.error = ""
-            return ret
-        catch error
-            $scope.error
-            return ""
-    
-    $scope.getQueryPath = ()->
-        query = $scope.parseQueryToJSON($scope.newQuery)
+    $scope.search = (query) ->
         if query == ""
             return ""
-        return "#/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }/idx/1/query/#{query}"
+        $location.path "/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }/idx/1/query/#{query}"
     
     $scope.previousDocumentUrl = () ->
         url = "#/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }/idx/#{$scope.idx - 1}"
