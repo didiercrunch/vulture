@@ -25,6 +25,7 @@ root.controllers.controller('documentCtrl', ['$scope', '$routeParams', '$locatio
     util.get(url).then((res) ->
          $scope.doc = res.data.document
          $scope.meta = res.data.meta
+         $scope.enlapsed_time = res.data.enlapsed_time
     ).catch( (res) ->
         if res.data.error == "not found"
             $scope.notfound = true
