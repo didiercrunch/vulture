@@ -21,7 +21,7 @@ root.controllers.controller('documentCtrl', ['$scope', '$routeParams', '$locatio
         url = "#{ url }/idx/#{$routeParams.idx - 1}"
     else if $routeParams.id
         url = "#{ url }/_id/#{$routeParams.id}"
-
+    $scope.raw_url = url
     util.get(url).then((res) ->
          $scope.doc = res.data.document
          $scope.meta = res.data.meta

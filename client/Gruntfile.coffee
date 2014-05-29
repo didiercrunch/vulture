@@ -44,5 +44,5 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-clean')
 
   # tasks
-  grunt.registerTask('default', ['bower:install', 'clean', 'coffee:compile'])
+  grunt.registerTask('default', ['clean', 'coffee:compile'])
   grunt.registerTask('dev', ['default', 'concurrent:target'])
