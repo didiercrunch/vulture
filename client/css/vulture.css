@@ -2,3 +2,7 @@
     font-family: 'Rock Salt';
     src: URL('RockSalt.ttf') format ('ttf');
 }
+
+path:hover{
+    stroke: #ff0000;
+}
