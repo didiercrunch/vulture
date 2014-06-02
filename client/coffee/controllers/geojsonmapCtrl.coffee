@@ -7,6 +7,9 @@ mapCenter =
     lng: -72.6169
     zoom: 7
 
+getLocalStorageCenter = () ->
+    JSON.parse(localStorage.getItem("mapCenter"))
+
 
 
 getSingleDataUrl = (routeParams) ->
@@ -36,9 +39,8 @@ transformListOfGeoJsonToGeometryCollection = (resData, routeParams) ->
         feature =
             type: "Feature"
             geometry: geojson,
-            properties:
-                "_vulture_url_link": getDocumentUrl(routeParams, doc._id)
-        ret.features.push(geojson)
+            properties: geojson.properties
+        ret.features.push(feature)
     return ret
     
 
@@ -46,7 +48,10 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$locat
     $scope.geojson = {}
     $scope.geojsonData = {}
     $scope.idx = Number($routeParams.idx)
-    $scope.center = mapCenter
+    $scope.center = getLocalStorageCenter()
+    
+    $scope.$watch 'center', () ->
+        localStorage.setItem("mapCenter", JSON.stringify($scope.center))
     
     $scope.getAggredatedUrl = () ->
         url = "#/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }/idx/all"
@@ -72,6 +77,12 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$locat
     
     $scope.$on "leafletDirectiveMap.geojsonClick", (ev, featureSelected, leafletEvent) ->
         $location.url(featureSelected.properties._vulture_url_link);
+        
+    $scope.setStyleOnFeature = (feature, element) ->
+        if feature.properties and feature.properties.style
+            element.setStyle(feature.properties.style)
+        
+    
     
     $scope.initSingleDocument = ()->
         url = getSingleDataUrl($routeParams)
@@ -83,16 +94,17 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$locat
             $scope.meta = res.data.meta
             $scope.geojsonData =
                 data: geojson
-                style: undefined
+                style: geojson.properties.style or undefined
                 resetStyleOnMouseout: true
 
     $scope.initAllDocuments = () ->
         url = getAllDataUrl($routeParams)
         util.get(url).then (res) ->
             $scope.meta = res.data.meta
+            geojson = transformListOfGeoJsonToGeometryCollection(res.data, $routeParams)
             $scope.geojsonData =
-                data: transformListOfGeoJsonToGeometryCollection(res.data, $routeParams)
-                style: undefined
+                data: geojson
+                onEachFeature: $scope.setStyleOnFeature
                 resetStyleOnMouseout: true
     
     if $routeParams.idx

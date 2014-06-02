@@ -32,5 +32,7 @@ func (this ApiHandler) ServeHTTP(w http.ResponseWriter, request *http.Request) {
 		w.WriteHeader(200)
 	}
 	enc := json.NewEncoder(w)
-	enc.Encode(ret)
+	if err := enc.Encode(ret); err != nil {
+		log.Println(err)
+	}
 }
