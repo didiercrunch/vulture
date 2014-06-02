@@ -14,7 +14,7 @@ type errorWrapper struct {
 type ApiHandler func(w http.ResponseWriter, request *http.Request) (interface{}, error)
 
 func (this ApiHandler) addEnlapsedTimeIfPossible(enlapsedTime time.Duration, obj interface{}) {
-	if dict, ok := obj.(map[string]interface{}); ok {
+	if dict, ok := obj.(map[string]interface{}); ok && dict != nil {
 		dict["enlapsed_time"] = enlapsedTime.Seconds()
 	}
 
