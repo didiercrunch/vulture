@@ -49,6 +49,7 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$locat
     $scope.geojsonData = {}
     $scope.idx = Number($routeParams.idx)
     $scope.center = getLocalStorageCenter()
+    $scope.queryObject = $routeParams.query or "{}"
     
     $scope.$watch 'center', () ->
         localStorage.setItem("mapCenter", JSON.stringify($scope.center))
@@ -113,5 +114,11 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$locat
     else
         $scope.mode = 'all'
         $scope.initAllDocuments()
+
+    $scope.changeQuery = (query) ->
+        if query == ""
+            return ""
+        r = $routeParams
+        $location.path "/#{ r.server }/#{ r.database }/#{ r.collection }/idx/1/query/#{query}/geojson/#{r.key}"
 ])
 

@@ -1,5 +1,5 @@
 
-<vul-search-bar query="queryObject" callback="alert"></vul-search-bar>
+<vul-search-bar query="{{ queryObject }}" callback="changeQuery"></vul-search-bar>
 
 <div class="row">
     <div class="columns large-12">
@@ -13,5 +13,5 @@
 </div>
 
 <div class="row">
-        <highchart id="chart1" config="chartConfig" class="columns large-12"></highchart>
+    <highchart id="chart1" config="chartConfig" class="columns large-12"></highchart>
 </div>

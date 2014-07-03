@@ -4,6 +4,7 @@ import (
 	"bitbucket.org/damyot/vulture/shared"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/gorilla/mux"
 	"labix.org/v2/mgo"
 	"labix.org/v2/mgo/bson"
@@ -89,7 +90,7 @@ func (this *VultureBackend) getIndexes() (interface{}, error) {
 	}
 	ret := make([]map[string]interface{}, len(idxs))
 	for i, idx := range idxs {
-		ret[i] = map[string]interface{}{"name": idx.Name, "keys": idx.Key}
+		ret[i] = map[string]interface{}{"name": idx.Name, "keys": idx.Key, "unique": idx.Unique}
 	}
 	return ret, nil
 
@@ -131,9 +132,11 @@ func (this *VultureBackend) wrapDocumentWithMetadata(doc interface{}, query *mgo
 	return ret, nil
 }
 
-func (this *VultureBackend) GetStat(key string) (interface{}, error) {
+func (this *VultureBackend) GetStat(query bson.M, key string) (interface{}, error) {
 	s := NewStatAggregator()
-	query := bson.M{key: bson.M{"$exists": true}}
+	if _, ok := query[key]; !ok {
+		query[key] = bson.M{"$exists": true}
+	}
 	iter := this.Collection.Find(query).Select(bson.M{key: 1}).Iter()
 	result := make(map[string]interface{})
 
@@ -158,9 +161,11 @@ func (this *VultureBackend) GetStat(key string) (interface{}, error) {
 	return <-out, nil
 }
 
-func (this *VultureBackend) GetHistogram(key string, min, max float64, numberOfBins int) (interface{}, error) {
+func (this *VultureBackend) GetHistogram(query bson.M, key string, min, max float64, numberOfBins int) (interface{}, error) {
 	hm := &HistogramMaker{min, max, numberOfBins}
-	query := bson.M{key: bson.M{"$exists": true}}
+	if _, ok := query[key]; !ok {
+		query[key] = bson.M{"$exists": true}
+	}
 	iter := this.Collection.Find(query).Select(bson.M{key: 1}).Iter()
 	result := make(map[string]interface{})
 
@@ -248,7 +253,7 @@ func getAllDocuments(w http.ResponseWriter, request *http.Request) (interface{},
 	if !ok || queryString == "" {
 		return vb.GetAllDocuments(nil)
 	}
-	query := make(map[string]interface{})
+	query := make(bson.M)
 	if err := json.Unmarshal([]byte(queryString), &query); err != nil {
 		return nil, errors.New("invalid json")
 	}
@@ -302,12 +307,22 @@ func getStats(w http.ResponseWriter, request *http.Request) (interface{}, error)
 		return nil, err
 	}
 
+	queryString, ok := mux.Vars(request)["query"]
+	query := make(map[string]interface{})
+	if ok && queryString != "" {
+		err := json.Unmarshal([]byte(queryString), &query)
+		if err != nil {
+			return nil, errors.New("invalid json")
+		}
+	}
+	fmt.Println(">>>", queryString)
+
 	vars := mux.Vars(request)
 	key, ok := vars["key"]
 	if !ok {
 		return nil, errors.New("key field not specified")
 	}
-	return vb.GetStat(key)
+	return vb.GetStat(query, key)
 }
 
 func getHistogram(w http.ResponseWriter, request *http.Request) (interface{}, error) {
@@ -344,6 +359,14 @@ func getHistogram(w http.ResponseWriter, request *http.Request) (interface{}, er
 		return nil, errors.New("key field not specified")
 	}
 
-	return vb.GetHistogram(key, min, max, numberOfBins)
+	queryString, ok := vars["query"]
+	query := make(map[string]interface{})
+	if ok && queryString != "" {
+		err := json.Unmarshal([]byte(queryString), &query)
+		if err != nil {
+			return nil, errors.New("invalid json")
+		}
+	}
 
+	return vb.GetHistogram(query, key, min, max, numberOfBins)
 }

@@ -5,6 +5,12 @@ hasIndex = (keyName, indexes) ->
             return true
     return false
 
+hasUniqueIndex = (keyName, indexes) ->
+    for index in indexes
+        if _.indexOf(index.keys, keyName) != -1
+            return index.unique
+    return false
+
 hasIndexAsc = (keyName, indexes) ->
     hasIndex(keyName, indexes)
 
@@ -17,7 +23,10 @@ has2dIndex = (keyName, indexes) ->
 
 getStatsUrl = (keyName, routeParams)->
     r = routeParams
-    "#/#{r.server}/#{r.database}/#{r.collection}/stats/#{ keyName }"
+    ret = "#/#{r.server}/#{r.database}/#{r.collection}/stats/#{ keyName }"
+    if r.query
+        ret = "#{ ret }/query/#{ r.query }"
+    return ret
 
 directive = () ->
     directive = 
@@ -34,6 +43,7 @@ directive = () ->
                 $scope.statsUrl = getStatsUrl($scope.keyName, $routeParams)
                 $scope.hasIndexDesc = hasIndexDesc($scope.keyName, $scope.indexes)
                 $scope.hasIndexAsc = hasIndexAsc($scope.keyName, $scope.indexes)
+                $scope.isIndexUnique = hasUniqueIndex($scope.keyName, $scope.indexes)
                 $scope.has2DIndex = has2dIndex($scope.keyName, $scope.indexes)
                 $scope.showTools = false
                 $scope.hasIndex = $scope.hasIndexDown or $scope.hasIndexUp or $scope.has2DIndex

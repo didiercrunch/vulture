@@ -7,6 +7,16 @@ of new features.
 *   Support for [GeoJson](http://geojson.org/) indexes.
 *   Support for GridFS
 
+
+### todo, version 1.
+
+*  ajouter liens de remerciment
+*  être capable de voir la carte avec l'image 
+*  meilleur légende d'histogram
+*  Ajouter filtre à histogram
+*  Ajouter filtre à carte
+*  Être capable de chercher par objectId etc.
+
 ### screenshots
 
 ![general view](https://bytebucket.org/damyot/vulture/raw/default/screenshots/screenshot_1.png)

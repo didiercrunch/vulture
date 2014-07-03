@@ -45,7 +45,7 @@ func (this *HistogramMaker) MakeHistogram(dataChannel chan float64, outputChanne
 		}
 		i := this.findSuitableBinForDatum(this.Min, step, datum)
 		if i >= len(hist) || i < 0 {
-			log.Println("what the fuck?!", this.Min, step, datum, i)
+			log.Println("bad bin format", this.Min, step, datum, i)
 		} else {
 			hist[i]++
 		}

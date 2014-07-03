@@ -4,7 +4,7 @@
 <div class="row">
     <div class="large-12 columns" style="text-align: center;">
             <a class="fa fa-chevron-left" ng-href="{{ previousDocumentUrl() }}" ng-show="{{ hasPreviousDocument() }}"></a>
-            <kbd>{{idx}} / {{ meta.count || 0  | number | replaceAllCommasBySpaces }}</kbd>
+            <kbd>{{idx}} / {{ meta.count + idx - 1 || 0  | number | replaceAllCommasBySpaces }}</kbd>
             <a class="fa fa-chevron-right" ng-href="{{ nextDocumentUrl() }}"></a>
     </div>
 </div>

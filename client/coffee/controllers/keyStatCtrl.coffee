@@ -19,11 +19,12 @@ findHistogramMax = (stats) ->
 getAxisLabel = (min, stepSize, numberOfBins) ->
     return (min + 0.5 * stepSize + i * stepSize for i in [0... numberOfBins])
 
-root.controllers.controller('keyStatCtrl', ['$scope', '$routeParams', 'util', ($scope, $routeParams, util) ->
+root.controllers.controller('keyStatCtrl', ['$scope', '$routeParams', '$location', 'util', ($scope, $routeParams, $location, util) ->
     $scope.name = $routeParams.key
     $scope.stats = []
-    
-    base_url  = "/api/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }"
+    $scope.queryObject = $routeParams.query or '{}'
+
+    base_url  = "/api/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }/query/#{$scope.queryObject}"
     stat_url = "#{ base_url }/stats/#{$routeParams.key}"
 
     $scope.alert=alert
@@ -47,6 +48,12 @@ root.controllers.controller('keyStatCtrl', ['$scope', '$routeParams', 'util', ($
             name: $routeParams.key
             color: '#008CBA'
         }]
+
+    $scope.changeQuery = (query) ->
+        if query == ""
+            return ""
+        r = $routeParams
+        $location.path "/#{ r.server }/#{ r.database }/#{ r.collection }/stats/#{ r.key }/query/#{query}"
             
     
     util.get(stat_url).then((res) ->

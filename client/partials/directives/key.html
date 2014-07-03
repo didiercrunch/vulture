@@ -1,13 +1,12 @@
 <span ng-mouseenter="showTools=true" ng-mouseleave="showTools=false">
     {{keyName}}
     
-    <span ng-style="{visibility: showTools ? 'inline': 'hidden'}">
-        <!-- place to but some hoover information-->
-        <a ng-href="{{ statsUrl }}"><i class="fa fa-signal" ng-show="canMakeHistogram"></i></a>
-    </span>
-    <span class="right" style="color:#008CBA;">
-        <i class="fa fa-sort-numeric-asc" ng-show="hasIndexAsc"></i>
-        <i class="fa fa-sort-numeric-desc" ng-show="hasIndexDesc"></i>
-        <a class="fa fa-globe" ng-show="has2DIndex" ng-href="{{ getGeoJsonUrl() }}" target="_blank"></a>
+
+    <span class="right" >
+        <a ng-href="{{ statsUrl }}" title="histogram"><i class="fa fa-signal" ng-show="canMakeHistogram"></i></a>
+        <span ng-show="isIndexUnique" title="unique index">&exist;!</span>
+        <i class="fa fa-sort-numeric-asc" title="ascending index" ng-show="hasIndexAsc"></i>
+        <i class="fa fa-sort-numeric-desc" title="descending index" ng-show="hasIndexDesc"></i>
+        <a class="fa fa-globe" ng-show="has2DIndex" ng-href="{{ getGeoJsonUrl() }}" target="_blank" title="2dsphere index"></a>
     </span>
 </span>

@@ -1,14 +1,17 @@
+<vul-search-bar query="{{ queryObject }}" callback="changeQuery"></vul-search-bar>
+
+
 <div class="row" ng-show="mode=='single_document'">
     <div class="large-12 columns" style="text-align: center;">
             <a class="fa fa-chevron-left" ng-href="{{ previousDocumentUrl() }}" ng-show="{{ hasPreviousDocument() }}"></a>
-            <kbd>{{idx}} / {{ meta.count }}</kbd>
+            <kbd>{{idx}} / {{ meta.count + idx - 1}}</kbd>
             <a class="fa fa-chevron-right" ng-href="{{ nextDocumentUrl() }}"></a>
     </div>
 </div>
 
 <div class="row" ng-show="mode=='all'">
     <div class="large-12 columns" style="text-align: center;">
-            <span>Showing a data set of {{geojsonData.data.geometries.length}} datum.</span>
+            <span>Showing {{meta.count}} documents on the same map.</span>
     </div>
 </div>
 
