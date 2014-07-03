@@ -30,7 +30,7 @@ file.
 |                                |                               |
 | ------------------------------ |:-----------------------------:|
 | ![general view][general_view]  | ![geojson view][geojson_view] |
-| ![general view][general_view]  | ![geojson view][geojson_view] |
+| ![stat view][stats_view]  | ![key view][key_view] |
 
 
 
