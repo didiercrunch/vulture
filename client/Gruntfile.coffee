@@ -45,4 +45,5 @@ module.exports = (grunt) ->
 
   # tasks
   grunt.registerTask('default', ['bower', 'clean', 'coffee:compile'])
+  grunt.registerTask('prod', ['bower', 'clean', 'coffee:compile'])
   grunt.registerTask('dev', ['default', 'concurrent:target'])
