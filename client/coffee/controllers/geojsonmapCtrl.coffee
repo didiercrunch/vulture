@@ -82,8 +82,6 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$locat
     $scope.setStyleOnFeature = (feature, element) ->
         if feature.properties and feature.properties.style
             element.setStyle(feature.properties.style)
-        
-    
     
     $scope.initSingleDocument = ()->
         url = getSingleDataUrl($routeParams)
@@ -97,6 +95,10 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$locat
                 data: geojson
                 style: geojson.properties.style or undefined
                 resetStyleOnMouseout: true
+
+    $scope.getGoogleMapLink = () ->
+        c = $scope.center
+        return "https://www.google.ca/maps/@#{c.lat},#{c.lng},#{c.zoom}z"
 
     $scope.initAllDocuments = () ->
         url = getAllDataUrl($routeParams)
