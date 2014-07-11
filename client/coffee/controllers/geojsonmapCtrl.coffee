@@ -2,13 +2,13 @@ root = this;
 
 
 
-mapCenter =
+defaultMapCenter =
     lat: 46.1227
     lng: -72.6169
     zoom: 7
 
 getLocalStorageCenter = () ->
-    JSON.parse(localStorage.getItem("mapCenter"))
+    JSON.parse(localStorage.getItem("mapCenter")) or defaultMapCenter
 
 
 

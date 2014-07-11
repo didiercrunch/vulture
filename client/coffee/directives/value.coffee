@@ -35,6 +35,7 @@ directive = () ->
                 $scope.isNumber = _.isNumber($scope.value)
                 $scope.isObject = _.isObject($scope.value)
                 $scope.isArray = _.isArray($scope.value)
+                $scope.isBoolean = _.isBoolean($scope.value)
             ]
     return directive
                         
