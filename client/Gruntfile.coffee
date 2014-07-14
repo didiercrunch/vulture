@@ -17,6 +17,10 @@ module.exports = (grunt) ->
 
     clean:
         compiledFiles: ["js"]
+        prod: [
+               "node_modules",
+               "bower_components/fontawesome/src",
+               ]
 
     coffee:
       compile:
@@ -49,5 +53,5 @@ module.exports = (grunt) ->
 
   # tasks
   grunt.registerTask('default', ['bower', 'clean:compiledFiles', 'coffee:compile'])
-  grunt.registerTask('prod', ['shell:bower', 'clean:compiledFiles', 'coffee:compile'])
+  grunt.registerTask('prod', ['shell:bower', 'clean:compiledFiles', 'coffee:compile', 'clean:prod'])
   grunt.registerTask('dev', ['default', 'concurrent:target'])
