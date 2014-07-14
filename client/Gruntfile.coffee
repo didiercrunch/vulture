@@ -4,16 +4,19 @@ module.exports = (grunt) ->
   grunt.initConfig(
     packagekg: grunt.file.readJSON('package.json')
     bower:
-      install: {}
-
+      install:{}
+    shell:
+        bower:
+            command: "node_modules/.bin/bower install"
     connect:
       server:
         options:
           port: 4506
           base: '.'
           keepalive: true
-    
-    clean: ["js"]
+
+    clean:
+        compiledFiles: ["js"]
 
     coffee:
       compile:
@@ -42,8 +45,9 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks('grunt-contrib-watch')
   grunt.loadNpmTasks('grunt-concurrent')
   grunt.loadNpmTasks('grunt-contrib-clean')
+  grunt.loadNpmTasks('grunt-shell')
 
   # tasks
-  grunt.registerTask('default', ['bower', 'clean', 'coffee:compile'])
-  grunt.registerTask('prod', ['bower', 'clean', 'coffee:compile'])
+  grunt.registerTask('default', ['bower', 'clean:compiledFiles', 'coffee:compile'])
+  grunt.registerTask('prod', ['shell:bower', 'clean:compiledFiles', 'coffee:compile'])
   grunt.registerTask('dev', ['default', 'concurrent:target'])
