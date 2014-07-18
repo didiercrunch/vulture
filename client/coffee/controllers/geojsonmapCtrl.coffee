@@ -7,8 +7,22 @@ defaultMapCenter =
     lng: -72.6169
     zoom: 7
 
-getLocalStorageCenter = () ->
+getLocalStorageMapCenter = () ->
     JSON.parse(localStorage.getItem("mapCenter")) or defaultMapCenter
+
+getInitialCenter = (loc) ->
+    if loc
+        loc = (Number(x) for x in loc.split(","))
+        if loc.length != 3
+            return getLocalStorageMapCenter()
+        ret =
+            lat: loc[0]
+            lng: loc[1]
+            zoom: loc[2]
+        return ret
+    return getLocalStorageMapCenter()
+        
+    
 
 
 
@@ -48,7 +62,7 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$locat
     $scope.geojson = {}
     $scope.geojsonData = {}
     $scope.idx = Number($routeParams.idx)
-    $scope.center = getLocalStorageCenter()
+    $scope.center = getInitialCenter($routeParams.loc)
     $scope.queryObject = $routeParams.query or "{}"
     
     $scope.$watch 'center', () ->
@@ -122,5 +136,14 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$locat
             return ""
         r = $routeParams
         $location.path "/#{ r.server }/#{ r.database }/#{ r.collection }/idx/1/query/#{query}/geojson/#{r.key}"
+    
+    $scope.getUrlWithLocation = () ->
+        c = $scope.center
+        if $routeParams.loc
+            l = $location.absUrl()
+            rgx = /\/location\/-?\d{0,3}\.?\d*,-?\d{0,3}\.?\d*,\d+/
+            return l.replace(rgx, "/location/#{c.lat},#{c.lng},#{c.zoom}")
+        else
+            return "#{$location.absUrl()}/location/#{c.lat},#{c.lng},#{c.zoom}"
 ])
 

@@ -21,12 +21,31 @@
     </div>
 </div>
 
-<div class="row" ng-show="mode=='single_document' && idx + meta.count < 1000">
-    <div class="large-12 columns" style="text-align: center;" >
-            <a ng-href="{{ getAggredatedUrl() }}">Aggregated representation</a>
-    </div>
-    <div class="large-12 columns" style="text-align: center;" >
-            <a ng-href="{{ getGoogleMapLink() }}" target="_blank">see region on google map</a>
+
+<br>
+<div class="row">
+    <div class="columns large-12">
+        <ul class="inline-list">
+            <li ng-show="mode=='single_document' && idx + meta.count < 1000">
+                <a ng-href="{{ getAggredatedUrl() }}">aggregated representation</a>
+            </li>
+            <li>
+                <a ng-href="{{ getGoogleMapLink() }}" target="_blank">google map</a>
+            </li>
+            <li>
+                <a ng-click="showCopyLink = !showCopyLink">
+                    <span>copy link</span>
+                </a>
+            </li>
+        </ul>
     </div>
 </div>
 
+<div class="row" ng-show="showCopyLink">
+    <div class="columns large-12 text-center">
+        <span>
+            <input value="{{ getUrlWithLocation() }}" style="font-size: 0.8em;" select-on-click readonly> 
+            <kbd>Ctrl</kbd> + <kbd>C</kbd>
+        </span>
+    </div>
+</div>
