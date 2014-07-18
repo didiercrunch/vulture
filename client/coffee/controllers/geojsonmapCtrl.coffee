@@ -58,7 +58,7 @@ transformListOfGeoJsonToGeometryCollection = (resData, routeParams) ->
     return ret
     
 
-root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$location', 'util', ($scope, $routeParams, $location, util) ->
+root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$location', '$rootScope', 'util', ($scope, $routeParams, $location, $rootScope, util) ->
     $scope.geojson = {}
     $scope.geojsonData = {}
     $scope.idx = Number($routeParams.idx)
@@ -96,6 +96,11 @@ root.controllers.controller('geojsonmapCtrl', ['$scope', '$routeParams', '$locat
     $scope.setStyleOnFeature = (feature, element) ->
         if feature.properties and feature.properties.style
             element.setStyle(feature.properties.style)
+        element.on
+            click: (e) ->
+                $rootScope.$broadcast("leafletDirectiveMap.geojsonClick", feature, e)
+
+
     
     $scope.initSingleDocument = ()->
         url = getSingleDataUrl($routeParams)
