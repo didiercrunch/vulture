@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/mux"
+	goyaml "gopkg.in/yaml.v2"
 	"io/ioutil"
-	"launchpad.net/goyaml"
 	"log"
 	"net/http"
 	"path"

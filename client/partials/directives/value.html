@@ -16,4 +16,7 @@
             <pre> {{value | niceJSON | onlyNthLines:5}} </pre>
         </a>
     </span>
+    <span ng-show="isBoolean">
+        <pre>{{ value }}</pre>
+    </span>
 </span>
