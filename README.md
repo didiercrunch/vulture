@@ -10,9 +10,9 @@ project is inspired by [mongs](http://whit537.org/mongs/) but has additional fea
 ### run vulture
 
 1.  Download your binaries
-   *  [windows](https://bitbucket.org/damyot/vulture/downloads/vulture_1.0.0-vulture_windows_amd64.zip)
-   *  [mac](https://bitbucket.org/damyot/vulture/downloads/vulture_1.0.0-vulture_darwin_amd64.zip)
-   *  [linux](https://bitbucket.org/damyot/vulture/downloads/vulture_1.0.0-vulture_linux_amd64.tar.gz)
+   *  [windows](https://bitbucket.org/damyot/vulture/downloads/vulture_1.1.0-vulture_windows_amd64.zip)
+   *  [mac](https://bitbucket.org/damyot/vulture/downloads/vulture_1.1.0-vulture_darwin_amd64.zip)
+   *  [linux](https://bitbucket.org/damyot/vulture/downloads/vulture_1.1.0-vulture_linux_amd64.tar.gz)
 
 2.  Unzip the file
 
@@ -21,8 +21,8 @@ project is inspired by [mongs](http://whit537.org/mongs/) but has additional fea
 
 ### params
 
-You can add mongodb servers or change the vulture listening port in the params.yml
-file. 
+You can add mongodb servers or change the vulture listening port in the
+*params.yml* file. 
 
 
 ### screenshots
@@ -34,13 +34,13 @@ file.
 
 
 
+[general_view]: https://raw.githubusercontent.com/didiercrunch/vulture/master/screenshots/general.png
+[geojson_view]: https://raw.githubusercontent.com/didiercrunch/vulture/master/screenshots/geo.png
+[stats_view]: https://raw.githubusercontent.com/didiercrunch/vulture/master/screenshots/stats.png
+[key_view]: https://raw.githubusercontent.com/didiercrunch/vulture/master/screenshots/key.png
 
 
+### coding style
 
-
-
-
-[general_view]: https://bytebucket.org/damyot/vulture/raw/default/screenshots/general.png
-[geojson_view]: https://bytebucket.org/damyot/vulture/raw/default/screenshots/geo.png
-[stats_view]: https://bytebucket.org/damyot/vulture/raw/default/screenshots/stats.png
-[key_view]: https://bytebucket.org/damyot/vulture/raw/default/screenshots/key.png
+The coding standard is very low.  Unfortunatly. there are very few tests.  If the project
+triggers enough enthusiasm, I'll make more tests.

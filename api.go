@@ -1,16 +1,18 @@
 package main
 
 import (
-	"bitbucket.org/damyot/vulture/shared"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gorilla/mux"
-	"gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
 	"net/http"
 	"net/url"
 	"strconv"
+
+	"github.com/gorilla/mux"
+	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
+
+	"github.com/didiercrunch/vulture/shared"
 )
 
 type VultureBackend struct {

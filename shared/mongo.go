@@ -3,9 +3,10 @@ package shared
 import (
 	"errors"
 	"fmt"
-	"gopkg.in/mgo.v2"
 	"net/url"
 	"strings"
+
+	"gopkg.in/mgo.v2"
 )
 
 var mongoClients = make(map[string]*mgo.Session)

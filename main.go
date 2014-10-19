@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
-	goyaml "gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"path"
 	"strconv"
+
+	"github.com/gorilla/mux"
+	goyaml "gopkg.in/yaml.v2"
 )
 
 const PARAM_FILE string = "params.yml"

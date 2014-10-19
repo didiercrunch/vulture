@@ -1,8 +1,0 @@
-syntax: glob
-re:^client/bower_components/
-re:^client/node_modules/
-re:^client/js/
-re:^client/lib/
-re:^vulture$
-*.komodoproject
-*.out
