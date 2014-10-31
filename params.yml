@@ -18,3 +18,7 @@ MongoServers:
     -
       name: localhost
       url: localhost:27017
+
+    -
+      name: vulture example
+      url: mongodb://vulture:vulture_example@ds047800.mongolab.com:47800/vulture_example

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"gopkg.in/mgo.v2"
@@ -63,9 +64,10 @@ func (this *VultureBackend) GetDataBases() ([]string, error) {
 	dbs, err := this.Client.DatabaseNames()
 	if err == nil {
 		return dbs, nil
-	} else if err.Error() == "unauthorized" {
+	} else if strings.Contains(err.Error(), "authorized") {
 		return this.getDatabaseFromMongoURL()
 	} else {
+		fmt.Println(">>> ", err.Error())
 		return nil, err
 	}
 }
