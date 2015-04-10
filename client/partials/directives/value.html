@@ -1,11 +1,13 @@
 <span>
+    <span ng-show="isObjectId">
+        <pre> {{value}}  [ {{getDateFromObjectId(value)}} ]</pre>
+    </span>
     <span ng-show="isString">
         <pre ng-show="isSmallString(value)"> {{value}} </pre>
-        
+
         <a ng-hide="isSmallString(value)" ng-href="{{ url() }}">
             <pre> {{ getSmallPrefix(value) }} </pre>
         </a>
-        
     </span>
     <span ng-show="isNumber">
         {{value | number | replaceAllCommasBySpaces}}

@@ -22,3 +22,20 @@ MongoServers:
     -
       name: vulture example
       url: mongodb://vulture:vulture_example@ds047800.mongolab.com:47800/vulture_example
+
+    -
+     name: mioau
+     url: localhost:9999
+
+
+    -
+     name: kilink
+     url: 192.168.82.105:27017
+
+    -
+     name: brandindex demo
+     url: vdev-bix.paix.yougov.local
+   
+    -
+     name: brandindex prod
+     url: vbixmgo.paix.yougov.local
