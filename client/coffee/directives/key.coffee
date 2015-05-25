@@ -26,10 +26,12 @@ getStatsUrl = (keyName, routeParams)->
     ret = "#/#{r.server}/#{r.database}/#{r.collection}/stats/#{ keyName }"
     if r.query
         ret = "#{ ret }/query/#{ r.query }"
+    else if r.pipeline
+        ret = "#{ret}/pipeline/#{r.pipeline}"
     return ret
 
 directive = () ->
-    directive = 
+    directive =
         templateUrl: "/partials/directives/key.html"
         replace: true,
         transclude: false,
@@ -39,6 +41,7 @@ directive = () ->
             value: "="
             indexes: "="
         controller:["$scope", "$routeParams", ($scope, $routeParams) ->
+                $scope.indexes = $scope.indexes or []
                 $scope.canMakeHistogram = _.isNumber($scope.value)
                 $scope.statsUrl = getStatsUrl($scope.keyName, $routeParams)
                 $scope.hasIndexDesc = hasIndexDesc($scope.keyName, $scope.indexes)
@@ -56,5 +59,5 @@ directive = () ->
                     return "#{url}/geojson/#{$scope.keyName}"
             ]
     return directive
-                        
+
 directives.directive( "vulKey", [directive])

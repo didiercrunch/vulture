@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -67,7 +66,6 @@ func (this *VultureBackend) GetDataBases() ([]string, error) {
 	} else if strings.Contains(err.Error(), "authorized") {
 		return this.getDatabaseFromMongoURL()
 	} else {
-		fmt.Println(">>> ", err.Error())
 		return nil, err
 	}
 }
@@ -114,7 +112,6 @@ func (this *VultureBackend) getMetaData(query *mgo.Query) (map[string]interface{
 	}
 
 	return meta, nil
-
 }
 
 func (this *VultureBackend) GetDocumentByIndex(index int, query interface{}) (map[string]interface{}, error) {
@@ -136,12 +133,8 @@ func (this *VultureBackend) wrapDocumentWithMetadata(doc interface{}, query *mgo
 	return ret, nil
 }
 
-func (this *VultureBackend) GetStat(query bson.M, key string) (interface{}, error) {
+func (this *VultureBackend) getStat(iter *mgo.Iter, key string) (interface{}, error) {
 	s := NewStatAggregator()
-	if _, ok := query[key]; !ok {
-		query[key] = bson.M{"$exists": true}
-	}
-	iter := this.Collection.Find(query).Select(bson.M{key: 1}).Iter()
 	result := make(map[string]interface{})
 
 	in := make(chan float64)
@@ -165,12 +158,8 @@ func (this *VultureBackend) GetStat(query bson.M, key string) (interface{}, erro
 	return <-out, nil
 }
 
-func (this *VultureBackend) GetHistogram(query bson.M, key string, min, max float64, numberOfBins int) (interface{}, error) {
+func (this *VultureBackend) getHistogram(iter *mgo.Iter, key string, min, max float64, numberOfBins int) (interface{}, error) {
 	hm := &HistogramMaker{min, max, numberOfBins}
-	if _, ok := query[key]; !ok {
-		query[key] = bson.M{"$exists": true}
-	}
-	iter := this.Collection.Find(query).Select(bson.M{key: 1}).Iter()
 	result := make(map[string]interface{})
 
 	in := make(chan float64)
@@ -191,7 +180,32 @@ func (this *VultureBackend) GetHistogram(query bson.M, key string, min, max floa
 		return nil, err
 	}
 	return <-out, nil
+}
 
+func (this *VultureBackend) GetStat(query bson.M, key string) (interface{}, error) {
+	if _, ok := query[key]; !ok {
+		query[key] = bson.M{"$exists": true}
+	}
+	iter := this.Collection.Find(query).Select(bson.M{key: 1}).Iter()
+	return this.getStat(iter, key)
+}
+
+func (this *VultureBackend) GetStatFromPipeline(pipeline []interface{}, key string) (interface{}, error) {
+	iter := this.Collection.Pipe(pipeline).Iter()
+	return this.getStat(iter, key)
+}
+
+func (this *VultureBackend) GetHistogram(query bson.M, key string, min, max float64, numberOfBins int) (interface{}, error) {
+	if _, ok := query[key]; !ok {
+		query[key] = bson.M{"$exists": true}
+	}
+	iter := this.Collection.Find(query).Select(bson.M{key: 1}).Iter()
+	return this.getHistogram(iter, key, min, max, numberOfBins)
+}
+
+func (this *VultureBackend) GetHistogramFromPipeline(pipeline []interface{}, key string, min, max float64, numberOfBins int) (interface{}, error) {
+	iter := this.Collection.Pipe(pipeline).Iter()
+	return this.getHistogram(iter, key, min, max, numberOfBins)
 }
 
 func (this *VultureBackend) GetAllDocuments(query interface{}) (interface{}, error) {
@@ -200,6 +214,16 @@ func (this *VultureBackend) GetAllDocuments(query interface{}) (interface{}, err
 	iter := this.Collection.Find(query).Iter()
 	iter.All(&result)
 	if err := iter.Close(); err != nil {
+		return nil, err
+	}
+
+	return this.wrapDocumentWithMetadata(result, nil)
+}
+
+func (this *VultureBackend) GetAggregatePipelineResult(pipeline interface{}) (interface{}, error) {
+	var result []map[string]interface{}
+	pipe := this.Collection.Pipe(pipeline)
+	if err := pipe.All(&result); err != nil {
 		return nil, err
 	}
 
@@ -280,6 +304,23 @@ func getDocumentById(w http.ResponseWriter, request *http.Request) (interface{},
 	return vb.GetDocumentByIndex(0, bson.M{"_id": bson.ObjectIdHex(id)})
 }
 
+func getAggregatePipelireResult(w http.ResponseWriter, request *http.Request) (interface{}, error) {
+	vb, err := GetVultureBackend(request)
+	if err != nil {
+		return nil, err
+	}
+	vars := mux.Vars(request)
+	pipelineString, ok := vars["pipeline"]
+	if !ok {
+		return nil, errors.New("pipeline field not specified")
+	}
+	var pipeline []interface{}
+	if err := json.Unmarshal([]byte(pipelineString), &pipeline); err != nil {
+		return nil, err
+	}
+	return vb.GetAggregatePipelineResult(pipeline)
+}
+
 func getDocumentByQueryAndIndex(w http.ResponseWriter, request *http.Request) (interface{}, error) {
 	vb, err := GetVultureBackend(request)
 	if err != nil {
@@ -305,6 +346,28 @@ func getDocumentByQueryAndIndex(w http.ResponseWriter, request *http.Request) (i
 	return vb.GetDocumentByIndex(index, query)
 }
 
+func getStatsFromPipeline(w http.ResponseWriter, request *http.Request) (interface{}, error) {
+	vb, err := GetVultureBackend(request)
+	if err != nil {
+		return nil, err
+	}
+	vars := mux.Vars(request)
+	pipelineString, ok := vars["pipeline"]
+	if !ok {
+		return nil, errors.New("pipeline field not specified")
+	}
+	var pipeline []interface{}
+	if err := json.Unmarshal([]byte(pipelineString), &pipeline); err != nil {
+		return nil, err
+	}
+
+	key, ok := vars["key"]
+	if !ok {
+		return nil, errors.New("key field not specified")
+	}
+	return vb.GetStatFromPipeline(pipeline, key)
+}
+
 func getStats(w http.ResponseWriter, request *http.Request) (interface{}, error) {
 	vb, err := GetVultureBackend(request)
 	if err != nil {
@@ -319,7 +382,6 @@ func getStats(w http.ResponseWriter, request *http.Request) (interface{}, error)
 			return nil, errors.New("invalid json")
 		}
 	}
-	fmt.Println(">>>", queryString)
 
 	vars := mux.Vars(request)
 	key, ok := vars["key"]
@@ -373,4 +435,50 @@ func getHistogram(w http.ResponseWriter, request *http.Request) (interface{}, er
 	}
 
 	return vb.GetHistogram(query, key, min, max, numberOfBins)
+}
+
+func getHistogramFromPipeline(w http.ResponseWriter, request *http.Request) (interface{}, error) {
+	vb, err := GetVultureBackend(request)
+	vars := mux.Vars(request)
+	smin, ok := vars["min"]
+	if !ok {
+		return nil, errors.New("min field not specified")
+	}
+	min, err := strconv.ParseFloat(smin, 64)
+	if err != nil {
+		return nil, errors.New("min value is not an float64")
+	}
+
+	smax, ok := vars["max"]
+	if !ok {
+		return nil, errors.New("max field not specified")
+	}
+	max, err := strconv.ParseFloat(smax, 64)
+	if err != nil {
+		return nil, errors.New("max value is not an float64")
+	}
+	sNumberOfBins, ok := vars["number_of_bins"]
+	if !ok {
+		return nil, errors.New("number_of_bins field not specified")
+	}
+	numberOfBins, err := strconv.Atoi(sNumberOfBins)
+	if err != nil {
+		return nil, errors.New("numberOfBins value is not an int")
+	}
+
+	key, ok := vars["key"]
+	if !ok {
+		return nil, errors.New("key field not specified")
+	}
+
+	pipelineString, ok := vars["pipeline"]
+	if !ok {
+		return nil, errors.New("pipeline field not specified")
+	}
+	var pipeline []interface{}
+	if err := json.Unmarshal([]byte(pipelineString), &pipeline); err != nil {
+		return nil, err
+	}
+
+	return vb.GetHistogramFromPipeline(pipeline, key, min, max, numberOfBins)
 }

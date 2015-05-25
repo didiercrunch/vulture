@@ -5,16 +5,16 @@ joinArray = (a, b)->
     return a
 
 root.controllers.controller('topBarCtrl', ['$scope', '$location', ($scope, $location) ->
-    
+
     $scope.loading = false
-    
+
     $scope.$on('$routeChangeSuccess', (next, current) ->
         $scope.path = _.filter($location.path().split("/"), (s) -> s)
-        if $scope.path[5] == "query"
+        if $scope.path[5] in  ["query", "pipeline"]
             $scope.path = joinArray($scope.path[0...6], $scope.path[7...-1])
         $scope.getHistoryUrl = (idx) ->
             ret = "#/" + ($scope.path[i] for i in [0...idx]).join("/")
-            if _.indexOf(["idx", "geojson", "query", "_id", "field", "all", "stats"], $scope.path[idx]) != -1
+            if _.indexOf(["idx", "geojson", "query", "_id", "field", "all", "stats", "pipeline"], $scope.path[idx]) != -1
                 return ""
             if idx == 0
                 ret += "servers"
@@ -28,7 +28,7 @@ root.controllers.controller('topBarCtrl', ['$scope', '$location', ($scope, $loca
     )
     $scope.$on "loading", ()->
         $scope.loading = true
-    
+
     $scope.$on "loadingFinished", ()->
         $scope.loading = false
  ])

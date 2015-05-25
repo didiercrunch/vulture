@@ -22,13 +22,16 @@ getAxisLabel = (min, stepSize, numberOfBins) ->
 root.controllers.controller('keyStatCtrl', ['$scope', '$routeParams', '$location', 'util', ($scope, $routeParams, $location, util) ->
     $scope.name = $routeParams.key
     $scope.stats = []
-    $scope.queryObject = $routeParams.query or '{}'
+    $scope.queryObject = $routeParams.query or $routeParams.pipeline or '{}'
 
-    base_url  = "/api/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }/query/#{$scope.queryObject}"
+    base_url  = "/api/#{ $routeParams.server }/#{ $routeParams.database }/#{ $routeParams.collection }"
+    if $routeParams.pipeline
+        base_url = "#{base_url}/pipeline/#{$routeParams.pipeline}"
+    else
+        base_url = "#{base_url}/query/#{$scope.queryObject}"
     stat_url = "#{ base_url }/stats/#{$routeParams.key}"
 
-    $scope.alert=alert
-    
+
     $scope.chartConfig =
         options:
             chart:
@@ -54,8 +57,8 @@ root.controllers.controller('keyStatCtrl', ['$scope', '$routeParams', '$location
             return ""
         r = $routeParams
         $location.path "/#{ r.server }/#{ r.database }/#{ r.collection }/stats/#{ r.key }/query/#{query}"
-            
-    
+
+
     util.get(stat_url).then((res) ->
         for key, val of res.data
             $scope.stats.push({name: humanValueOfStatisticalAbreviation[key], value: val })
@@ -68,6 +71,5 @@ root.controllers.controller('keyStatCtrl', ['$scope', '$routeParams', '$location
         $scope.chartConfig.series[0].data = res.data.values
         $scope.chartConfig.xAxis.categories = getAxisLabel(res.data.min, res.data.step_size, res.data.values.length)
     )
-    
-])
 
+])

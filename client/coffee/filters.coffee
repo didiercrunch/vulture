@@ -6,7 +6,9 @@ root.filters.filter 'escape', () ->
 
 root.filters.filter 'replaceAllCommasBySpaces', () ->
   return (text) ->
-      return text.replace(new RegExp(",","g"), " ")
+      if _.isString(text)
+          return text.replace(new RegExp(",","g"), " ")
+      return text
 
 root.filters.filter 'niceJSON', () ->
   return (obj) ->

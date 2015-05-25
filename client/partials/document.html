@@ -1,18 +1,18 @@
 
-<vul-search-bar query="{{ query }}" callback="search"></vul-search-bar>
+<vul-search-bar query="{{ query }}" querycallback="search" pipelinecallback="executePipeline" ></vul-search-bar>
 
 <div class="row">
     <div class="large-12 columns" style="text-align: center;">
             <a class="fa fa-chevron-left" ng-href="{{ previousDocumentUrl() }}" ng-show="{{ hasPreviousDocument() }}"></a>
-            <kbd>{{idx}} / {{ meta.count + idx - 1 || 0  | number | replaceAllCommasBySpaces }}</kbd>
-            <a class="fa fa-chevron-right" ng-href="{{ nextDocumentUrl() }}"></a>
+            <kbd ng-show="total > 0"> {{idx}} / {{ total | number | replaceAllCommasBySpaces }}</kbd>
+            <a class="fa fa-chevron-right" ng-href="{{ nextDocumentUrl() }}" ng-show="hasNextDocument()"></a>
     </div>
 </div>
 
 <div class="row">
-    <div class="large-12 columns" style="text-align: center;" ng-show="!closeAlert && notfound">
+    <div class="large-12 columns" style="text-align: center;" ng-show="!closeAlert && error">
             <div class="alert-box">
-                No document Found!
+                {{ error }}
                 <a class="close" ng-click="closeAlert=true">&times;</a>
             </div>
     </div>
@@ -38,7 +38,7 @@
               </tr>
             </tbody>
         </table>
-        
+
     </div>
 </div>
 <div class="row" ng-show="enlapsed_time">

@@ -30,7 +30,7 @@ directive = () ->
                     return "#/#{rp.server}/#{rp.database}/#{rp.collection}/_id/#{s.docId}/field/#{s.key}"
                 $scope.isObjectId = (val) ->
                     objectIdRegexp =  /^[01234567890abcdef]{24}$/
-                    return _.isString(val) and objectIdRegexp.test(val)
+                    _.isString(val) and objectIdRegexp.test(val)
 
                 $scope.getDateFromObjectId = (objectId) ->
                     util.parseObjectId(objectId).date.toISOString()

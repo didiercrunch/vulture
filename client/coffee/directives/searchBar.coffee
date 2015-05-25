@@ -2,17 +2,17 @@
 mongoJsToMongoJSON = (queryString) ->
     ObjectId = (id) ->
         return {"$oid": id}
-    
+
     DBRef = (name, id) ->
         return {"$ref": name, "$id": id}
-    
+
     Timestamp = (t, i) ->
         return {"t": t, "i": i}
     NumberLong = (number) ->
         return { "$numberLong": String(number)}
     MaxKey = { "$maxKey": 1 }
     MinKey = { "$minKey": 1 }
-    
+
     query = ""
     eval("query = " + queryString)
     fixQuery = (query) ->
@@ -35,7 +35,7 @@ mongoJsToMongoJSON = (queryString) ->
                 query[k] = fixQuery(v)
             return query
         return query
-    
+
     return fixQuery(query)
 
 testmongoJsToMongoJSON = () ->
@@ -57,27 +57,29 @@ testmongoJsToMongoJSON = () ->
                 ]
             }"""
     assertEqual(mongoJsToMongoJSON(s), {a: [1,3, {reg: [{ "$regex":"allo", "$options": "mgi" }, {"$date": 1399585944320}]}]})
-    
+
 
 testmongoJsToMongoJSON()
 
 directive = () ->
-    directive = 
+    directive =
         templateUrl: "/partials/directives/searchBar.html"
         replace: true,
         transclude: false,
         restrict: 'E',
         scope:
             query: "@"
-            callback: "="
+            querycallback: "="
+            pipelinecallback: "="
         controller:["$scope", "$routeParams", ($scope, $routeParams) ->
                 $scope.bigInput = false
                 $scope.newQuery = $scope.query or ""
                 $scope.codeMirrorOptions =
                     lineWrapping : true
                     lineNumbers: true
+                    indentUnit: 4
                     mode: 'text/typescript'
-                
+
                 $scope.parseQueryToJSON = (query) ->
                     try
                         query = mongoJsToMongoJSON(query)
@@ -87,18 +89,29 @@ directive = () ->
                     catch error
                         $scope.error
                         return ""
-                
-                $scope.isValidEntry = ()->
+
+                $scope.isValidQueryEntry = ()->
                     query = $scope.parseQueryToJSON($scope.newQuery)
-                    return query != ""
-                
-                $scope.callCallback = () ->
+                    return query != "" and not _.isArray(JSON.parse(query))
+
+                $scope.isValidPipelineEntry = ()->
                     query = $scope.parseQueryToJSON($scope.newQuery)
-                    if query != ""
+                    query != "" and _.isArray(JSON.parse(query))
+
+                $scope.queryCallback = () ->
+                    if $scope.isValidQueryEntry()
+                        query = $scope.parseQueryToJSON($scope.newQuery)
                         f = () ->
-                            $scope.callback(query)
+                            $scope.querycallback(query)
+                        $scope.$eval(f)
+
+                $scope.pipelineCallback = () ->
+                    if $scope.isValidPipelineEntry()
+                        query = $scope.parseQueryToJSON($scope.newQuery)
+                        f = () ->
+                            $scope.pipelinecallback(query)
                         $scope.$eval(f)
             ]
     return directive
-                        
+
 directives.directive( "vulSearchBar", [directive])

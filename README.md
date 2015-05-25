@@ -6,6 +6,8 @@ project is inspired by [mongs](http://whit537.org/mongs/) but has additional fea
 *   Support for [GeoJson](http://geojson.org/) indexes.
 *   View basic statistics
 *   Easy filtering support
+*   Use of (aggregation pipeline)[http://docs.mongodb.org/manual/core/aggregation-pipeline/]
+    in the user interface
 
 ### run vulture
 
@@ -22,7 +24,7 @@ project is inspired by [mongs](http://whit537.org/mongs/) but has additional fea
 ### params
 
 You can add mongodb servers or change the vulture listening port in the
-*params.yml* file. 
+*params.yml* file.
 
 
 ### screenshots
