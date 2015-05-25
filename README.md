@@ -6,8 +6,8 @@ project is inspired by [mongs](http://whit537.org/mongs/) but has additional fea
 *   Support for [GeoJson](http://geojson.org/) indexes.
 *   View basic statistics
 *   Easy filtering support
-*   Use of (aggregation pipeline)[http://docs.mongodb.org/manual/core/aggregation-pipeline/]
-    in the user interface
+*   Support of the [aggregation pipeline](http://docs.mongodb.org/manual/core/aggregation-pipeline/)
+    framework!
 
 ### run vulture
 
