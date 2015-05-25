@@ -1,4 +1,4 @@
-# Vulture ![general view](https://bytebucket.org/damyot/vulture/raw/default/client/images/vulture.svg)
+# Vulture ![super cool vulture logo](client/images/vulture.png)
 
 An advanced [MongoDB](http://www.mongodb.org/) data viewers in a web interface.  the
 project is inspired by [mongs](http://whit537.org/mongs/) but has additional features.
