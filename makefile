@@ -1,7 +1,7 @@
-prod:
-	cd client; npm install
-	cd client; node_modules/.bin/gulp
+prod: dev
+	rm -rf client/node_modules
 	goxc
+	goxc bintray
 
 dev:
 	go get

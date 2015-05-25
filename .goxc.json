@@ -1,11 +1,19 @@
 {
-	"PackageVersion": "1.1.0",
-	"PrereleaseInfo": "vulture",
-	"ConfigVersion": "0.9",
-	"Arch": "386,amd64",
-	"Os": "windows,linux,darwin",
-	 "Resources": {
-            "Include": "INSTALL*,README*,LICENSE*,client/*,params.yml",
-            "Exclude": "*.go"
+    "PackageVersion": "1.2.1",
+    "PrereleaseInfo": "vulture",
+    "ConfigVersion": "0.9",
+    "Arch": "386,amd64",
+    "Os": "windows,linux,darwin",
+    "Resources": {
+        "Include": "INSTALL*,README*,LICENSE*,client/*,params.yml",
+        "Exclude": "*.go"
+    },
+    "TaskSettings": {
+        "bintray": {
+            "package": "vulture",
+            "subject": "didiercrunch",
+            "repository": "generic",
+            "downloadspage": "bintray.md"
         }
+    }
 }

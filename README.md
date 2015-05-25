@@ -12,9 +12,9 @@ project is inspired by [mongs](http://whit537.org/mongs/) but has additional fea
 ### run vulture
 
 1.  Download your binaries
-   *  [windows](https://bitbucket.org/damyot/vulture/downloads/vulture_1.2.0-vulture_windows_amd64.zip)
-   *  [mac](https://bitbucket.org/damyot/vulture/downloads/vulture_1.2.0-vulture_darwin_amd64.zip)
-   *  [linux](https://bitbucket.org/damyot/vulture/downloads/vulture_1.2.0-vulture_linux_amd64.tar.gz)
+   *  [windows](https://dl.bintray.com/didiercrunch/generic/vulture_1.2.1-vulture_windows_amd64.zip)
+   *  [mac](https://dl.bintray.com/didiercrunch/generic/vulture_1.2.1-vulture_darwin_amd64.zip)
+   *  [linux](https://dl.bintray.com/didiercrunch/generic/vulture_1.2.1-vulture_linux_amd64.tar.gz)
 
 2.  Unzip the file
 
